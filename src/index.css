@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: abyss --default, cupcake;
+}
+@plugin "daisyui/theme" {
+  name: "abyss";
+  default: true;
+  --color-primary: green;
+  --color-secondary: green;
+}
