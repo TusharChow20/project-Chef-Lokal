@@ -4,7 +4,6 @@ import logo from "/logo.png";
 import { useLocation } from "react-router";
 const Navbar = () => {
   const location = useLocation();
-  console.log(location);
 
   return (
     <div>
