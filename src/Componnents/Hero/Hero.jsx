@@ -1,9 +1,19 @@
 import React from "react";
+import HeroSlider from "./HeroSlider";
 
 const Hero = () => {
+  // const axiosSecure = useAxiosSecurity();
+  // const { data: meals = [] } = useQuery({
+  //   queryKey: ["meals"],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get("/meals");
+  //     return res.data;
+  //   },
+  // });
+
   return (
     <div>
-      <h1>This is hero</h1>
+      <HeroSlider></HeroSlider>
     </div>
   );
 };
