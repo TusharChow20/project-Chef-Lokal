@@ -107,9 +107,6 @@ const Reviews = () => {
                     <h3 className="font-semibold text-white text-lg truncate">
                       {review.userName}
                     </h3>
-                    <p className="text-gray-400 text-sm truncate">
-                      {review.userEmail}
-                    </p>
                   </div>
                 </div>
 

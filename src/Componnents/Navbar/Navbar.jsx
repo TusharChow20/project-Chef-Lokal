@@ -1,19 +1,23 @@
 import React from "react";
 import PillNav from "../Navbar/pillnav";
 import logo from "/logo.png";
+import { useLocation } from "react-router";
 const Navbar = () => {
+  const location = useLocation();
+  console.log(location);
+
   return (
     <div>
       <PillNav
         logo={logo}
-        logoAlt="Company Logo"
+        logoAlt="Chef Lokal"
         items={[
           { label: "Home", href: "/" },
-          { label: "About", href: "/about" },
+          { label: "Meals", href: "/meals" },
           { label: "Services", href: "/services" },
-          { label: "Contact", href: "/contact" },
+          { label: "Login", href: "/login" },
         ]}
-        activeHref="/"
+        activeHref={location.pathname}
         className="custom-nav"
         ease="power2.easeOut"
         baseColor="#000000"
