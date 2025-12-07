@@ -5,6 +5,8 @@ import Home from "../Pages/Home/Home";
 import Meals from "../Pages/Meals/Meals";
 import Login from "../Pages/Authentication/Login/Login";
 import Registration from "../Pages/Authentication/Registration/Registration";
+import MealDetails from "../Pages/Meals/MEalDetails";
+import Order from "../Pages/Meals/Order";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,12 +21,20 @@ const router = createBrowserRouter([
         Component: Meals,
       },
       {
+        path: "/mealDetails/:id",
+        Component: MealDetails,
+      },
+      {
         path: "/login",
         Component: Login,
       },
       {
         path: "/register",
         Component: Registration,
+      },
+      {
+        path: "/orders/:id",
+        Component: Order,
       },
     ],
   },

@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useState, useMemo } from "react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Link } from "react-router";
 
 const Meals = () => {
   const axiosSecure = useAxiosSecurity();
@@ -176,9 +177,12 @@ const Meals = () => {
               </div>
 
               <div className="card-actions justify-end">
-                <button className="btn btn-primary w-full text-white">
+                <Link
+                  to={`/mealDetails/${meal._id}`}
+                  className="btn btn-primary w-full text-white"
+                >
                   View Details
-                </button>
+                </Link>
               </div>
             </div>
           </div>
