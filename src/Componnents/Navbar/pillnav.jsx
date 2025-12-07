@@ -16,6 +16,7 @@ const PillNav = ({
   onMobileMenuClick,
   initialLoadAnimation = true,
   rightSection,
+  mobileUserSection,
 }) => {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -423,7 +424,7 @@ const PillNav = ({
 
       <div
         ref={mobileMenuRef}
-        className="md:hidden absolute top-[3em] left-4 right-4 rounded-[27px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] z-[998] origin-top"
+        className="md:hidden absolute top-[3em] left-2 right-2 rounded-[27px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] z-[998] origin-top"
         style={{
           ...cssVars,
           background: "var(--base, #f0f0f0)",
@@ -445,7 +446,7 @@ const PillNav = ({
             };
 
             const linkClasses =
-              "block py-3 px-4 text-[16px] font-medium rounded-[50px] transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)]";
+              "block py-3 px-4 text-[16px] font-medium rounded-[50px] transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] overflow-hidden text-ellipsis whitespace-nowrap";
 
             return (
               <li key={item.href}>
@@ -476,6 +477,7 @@ const PillNav = ({
             );
           })}
         </ul>
+        {mobileUserSection}
       </div>
     </div>
   );

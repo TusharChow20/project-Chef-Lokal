@@ -32,7 +32,7 @@ const Navbar = () => {
     }
   };
 
-  // User profile section to render inside PillNav
+  // User profile section to render inside PillNav (Desktop)
   const renderUserSection = () => {
     if (!user) return null;
 
@@ -72,6 +72,42 @@ const Navbar = () => {
     );
   };
 
+  // Mobile user section to render in mobile menu
+  const renderMobileUserSection = () => {
+    if (!user) return null;
+
+    return (
+      <div className="p-3 flex items-center justify-between border-t border-gray-200 mt-2 pt-4">
+        {/* User Avatar - Mobile version */}
+        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
+          {user.photoURL ? (
+            <img
+              src={user.photoURL}
+              alt={user.displayName || "User"}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg">
+              {user.displayName
+                ? user.displayName[0].toUpperCase()
+                : user.email
+                ? user.email[0].toUpperCase()
+                : "U"}
+            </div>
+          )}
+        </div>
+
+        {/* Logout Button - Mobile version */}
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 active:bg-red-700 transition-colors duration-200 font-medium shadow-md text-sm"
+        >
+          Logout
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div>
       <PillNav
@@ -86,6 +122,7 @@ const Navbar = () => {
         hoveredPillTextColor="#ffffff"
         pillTextColor="#000000"
         rightSection={renderUserSection()}
+        mobileUserSection={renderMobileUserSection()}
       />
     </div>
   );
