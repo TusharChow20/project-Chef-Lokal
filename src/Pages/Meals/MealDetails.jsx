@@ -222,6 +222,25 @@ const MealDetails = () => {
                   </p>
                 </div>
               </div>
+              {/* Add this as a third column or below Chef Details */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-100 mb-4 flex items-center gap-2">
+                  <Star className="w-6 h-6 text-orange-500" />
+                  Reviews
+                </h2>
+                <div className="p-6 rounded-lg shadow-sm border border-gray-200">
+                  <p className="text-gray-400 mb-4">
+                    See what others are saying about this meal
+                  </p>
+                  <Link
+                    to={`/reviews/${meal._id}`}
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2 transition-all duration-300"
+                  >
+                    <Star className="w-5 h-5" />
+                    View All Reviews
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

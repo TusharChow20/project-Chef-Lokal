@@ -8,6 +8,7 @@ import Registration from "../Pages/Authentication/Registration/Registration";
 import MealDetails from "../Pages/Meals/MEalDetails";
 import Order from "../Pages/Meals/Order";
 import PrivateRoute from "./PrivateRoute";
+import AddReviews from "../Pages/Meals/AddReviews";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,7 +41,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/orders/:id",
-        Component: Order,
+        element: (
+          <PrivateRoute>
+            <Order></Order>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/reviews/:id",
+        element: (
+          <PrivateRoute>
+            <AddReviews></AddReviews>
+          </PrivateRoute>
+        ),
       },
     ],
   },
