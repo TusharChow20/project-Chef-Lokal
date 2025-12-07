@@ -15,6 +15,7 @@ const PillNav = ({
   pillTextColor,
   onMobileMenuClick,
   initialLoadAnimation = true,
+  rightSection,
 }) => {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -391,7 +392,12 @@ const PillNav = ({
             })}
           </ul>
         </div>
-
+        {/* //added this section later  */}
+        {rightSection && (
+          <div className="hidden md:flex items-center ml-2 h-[var(--nav-h)]">
+            {rightSection}
+          </div>
+        )}
         <button
           ref={hamburgerRef}
           onClick={toggleMobileMenu}
