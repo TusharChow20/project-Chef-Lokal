@@ -3,9 +3,10 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { useAuth } from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const Registration = () => {
-  const { signUp } = useAuth();
+  const { signUp, updateUserProfile } = useAuth();
   const {
     register,
     handleSubmit,
@@ -16,9 +17,27 @@ const Registration = () => {
   const password = watch("password");
 
   const handleRegSubmit = async (data) => {
+    const profileImage = data.photo[0];
     try {
       await signUp(data.email, data.password);
-
+      const formData = new FormData();
+      // photourl generation from store server
+      formData.append("image", profileImage);
+      axios
+        .post(
+          `https://api.imgbb.com/1/upload?key=${
+            import.meta.env.VITE_IMAGE_HOST
+          }`,
+          formData
+        )
+        .then((res) => {
+          //update registration
+          const userProfile = {
+            displayName: data.name,
+            photoURL: res.data.data.url,
+          };
+          updateUserProfile(userProfile);
+        });
       // Success alert
       Swal.fire({
         title: "Success!",
