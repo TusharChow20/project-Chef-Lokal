@@ -5,7 +5,7 @@ import { UtensilsCrossed, ChefHat, Calendar } from "lucide-react";
 
 const DailyMenu = () => {
   const axiosSecure = useAxiosSecurity();
-  const { data: meals = [] } = useQuery({
+  const { data } = useQuery({
     queryKey: ["/meals"],
     queryFn: async () => {
       const res = await axiosSecure.get("/meals");
@@ -15,7 +15,6 @@ const DailyMenu = () => {
 
   return (
     <div>
-      {/* Beautiful Title Section */}
       <div className="text-center py-8 px-4">
         <div className="flex items-center justify-center gap-3 mb-2">
           <UtensilsCrossed className="w-8 h-8 text-primary animate-pulse" />
@@ -38,7 +37,7 @@ const DailyMenu = () => {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 px-3">
-        {meals
+        {data?.meals
           .filter((meal) => {
             const mealDate = new Date(meal.createdDate).toLocaleDateString(
               "en-CA"

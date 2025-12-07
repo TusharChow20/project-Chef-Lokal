@@ -1,16 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
 
 const Meals = () => {
   const axiosSecure = useAxiosSecurity();
-  const { data: meals = [], isLoading } = useQuery({
-    queryKey: ["meals"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/meals");
-      return res.data;
-    },
-  });
+  const limit = 6;
+
+  const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["meals"],
+      queryFn: async ({ pageParam = 0 }) => {
+        const skip = pageParam * limit;
+        const res = await axiosSecure.get(`/meals?limit=${limit}&skip=${skip}`);
+        return res.data;
+      },
+      getNextPageParam: (lastPage, allPages) => {
+        const totalFetched = allPages.length * limit;
+        return totalFetched < lastPage.total ? allPages.length : undefined;
+      },
+    });
+
   if (isLoading) {
     return (
       <div>
@@ -47,11 +56,15 @@ const Meals = () => {
       </div>
     );
   }
+
+  // Flatten all pages into a single array of meals
+  const allMeals = data?.pages.flatMap((page) => page.meals) || [];
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 px-3">Our Meals</h1>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-3">
-        {meals.map((meal) => (
+        {allMeals.map((meal) => (
           <div
             key={meal._id}
             className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow"
@@ -91,7 +104,7 @@ const Meals = () => {
 
                 {/* Price and Rating */}
                 <div className="flex items-center justify-between pt-2">
-                  <p className="font-bold text-2xl text-primary">
+                  <p className="font-bold text-2xl text-gray-200">
                     ${meal.price}
                   </p>
                   <p className="flex items-center justify-end gap-1 text-lg">
@@ -109,6 +122,46 @@ const Meals = () => {
             </div>
           </div>
         ))}
+      </div>
+      {isFetchingNextPage &&
+        [...Array(6)].map((_, index) => (
+          <div
+            key={`loading-${index}`}
+            className="card bg-base-100 shadow-xl animate-pulse"
+          >
+            <figure className="h-56 bg-gray-600"></figure>
+            <div className="card-body">
+              <div className="h-8 bg-gray-700 rounded w-3/4 mb-3"></div>
+              <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-700 rounded w-5/6 mb-4"></div>
+
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-700 rounded w-1/3"></div>
+                <div className="h-4 bg-gray-700 rounded w-2/3"></div>
+                <div className="flex justify-between pt-2">
+                  <div className="h-8 bg-gray-700 rounded w-20"></div>
+                  <div className="h-6 bg-gray-700 rounded w-16"></div>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <div className="h-12 bg-gray-600 rounded w-full"></div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+      <div className="flex justify-center mt-6">
+        {hasNextPage && (
+          <button
+            className="btn btn-primary"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+          >
+            {isFetchingNextPage ? "Loading..." : "View More"}
+          </button>
+        )}
       </div>
     </div>
   );
