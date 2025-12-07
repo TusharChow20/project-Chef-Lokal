@@ -1,17 +1,25 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState, useMemo } from "react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 const Meals = () => {
   const axiosSecure = useAxiosSecurity();
   const limit = 6;
+  const [sortOrder, setSortOrder] = useState(null);
 
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["meals"],
+      queryKey: ["meals", sortOrder],
       queryFn: async ({ pageParam = 0 }) => {
         const skip = pageParam * limit;
-        const res = await axiosSecure.get(`/meals?limit=${limit}&skip=${skip}`);
+        let url = `/meals?limit=${limit}&skip=${skip}`;
+        // const res = await axiosSecure.get(`/meals?limit=${limit}&skip=${skip}`);
+        if (sortOrder) {
+          url += `&sortBy=price&sortOrder=${sortOrder}`;
+        }
+
+        const res = await axiosSecure.get(url);
         return res.data;
       },
       getNextPageParam: (lastPage, allPages) => {
@@ -19,6 +27,44 @@ const Meals = () => {
         return totalFetched < lastPage.total ? allPages.length : undefined;
       },
     });
+
+  const allMeals = data?.pages.flatMap((page) => page.meals) || [];
+
+  const sortedMeals = useMemo(() => {
+    if (!allMeals.length) return [];
+
+    const mealsCopy = [...allMeals];
+
+    if (sortOrder === "asc") {
+      return mealsCopy.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === "desc") {
+      return mealsCopy.sort((a, b) => b.price - a.price);
+    }
+
+    return mealsCopy;
+  }, [allMeals, sortOrder]);
+
+  const handleSortToggle = () => {
+    if (sortOrder === null) {
+      setSortOrder("asc");
+    } else if (sortOrder === "asc") {
+      setSortOrder("desc");
+    } else {
+      setSortOrder(null);
+    }
+  };
+
+  const getSortIcon = () => {
+    if (sortOrder === "asc") return <ArrowUp className="w-5 h-5" />;
+    if (sortOrder === "desc") return <ArrowDown className="w-5 h-5" />;
+    return <ArrowUpDown className="w-5 h-5" />;
+  };
+
+  const getSortText = () => {
+    if (sortOrder === "asc") return "Price: Low to High";
+    if (sortOrder === "desc") return "Price: High to Low";
+    return "Sort by Price";
+  };
 
   if (isLoading) {
     return (
@@ -57,14 +103,29 @@ const Meals = () => {
     );
   }
 
-  // Flatten all pages into a single array of meals
-  const allMeals = data?.pages.flatMap((page) => page.meals) || [];
-
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6 px-3">Our Meals</h1>
+      <h1 className="text-3xl font-bold mb-6 px-3 mt-3 md:mt-4 text-center">
+        Our Meals
+      </h1>
+
+      {/* Sort Button */}
+      <div className="flex justify-center mb-6 px-3">
+        <button
+          onClick={handleSortToggle}
+          className={`btn gap-2 transition-all duration-300 text-amber-200 ${
+            sortOrder
+              ? "btn-primary text-white shadow-lg scale-105"
+              : "btn-outline btn-primary hover:scale-105"
+          }`}
+        >
+          {getSortIcon()}
+          <span className="font-semibold">{getSortText()}</span>
+        </button>
+      </div>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-3">
-        {allMeals.map((meal) => (
+        {sortedMeals.map((meal) => (
           <div
             key={meal._id}
             className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow"
@@ -123,39 +184,43 @@ const Meals = () => {
           </div>
         ))}
       </div>
-      {isFetchingNextPage &&
-        [...Array(6)].map((_, index) => (
-          <div
-            key={`loading-${index}`}
-            className="card bg-base-100 shadow-xl animate-pulse"
-          >
-            <figure className="h-56 bg-gray-600"></figure>
-            <div className="card-body">
-              <div className="h-8 bg-gray-700 rounded w-3/4 mb-3"></div>
-              <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
-              <div className="h-4 bg-gray-700 rounded w-5/6 mb-4"></div>
 
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-700 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-700 rounded w-1/3"></div>
-                <div className="h-4 bg-gray-700 rounded w-2/3"></div>
-                <div className="flex justify-between pt-2">
-                  <div className="h-8 bg-gray-700 rounded w-20"></div>
-                  <div className="h-6 bg-gray-700 rounded w-16"></div>
+      {isFetchingNextPage && (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-3 mt-6">
+          {[...Array(6)].map((_, index) => (
+            <div
+              key={`loading-${index}`}
+              className="card bg-base-100 shadow-xl animate-pulse"
+            >
+              <figure className="h-56 bg-gray-600"></figure>
+              <div className="card-body">
+                <div className="h-8 bg-gray-700 rounded w-3/4 mb-3"></div>
+                <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-700 rounded w-5/6 mb-4"></div>
+
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-700 rounded w-1/3"></div>
+                  <div className="h-4 bg-gray-700 rounded w-2/3"></div>
+                  <div className="flex justify-between pt-2">
+                    <div className="h-8 bg-gray-700 rounded w-20"></div>
+                    <div className="h-6 bg-gray-700 rounded w-16"></div>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <div className="h-12 bg-gray-600 rounded w-full"></div>
                 </div>
               </div>
-
-              <div className="mt-4">
-                <div className="h-12 bg-gray-600 rounded w-full"></div>
-              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
 
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-6 mb-10">
         {hasNextPage && (
           <button
-            className="btn btn-primary"
+            className="btn btn-primary text-white"
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
           >

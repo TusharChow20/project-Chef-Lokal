@@ -37,62 +37,53 @@ const DailyMenu = () => {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 px-3">
-        {data?.meals
-          .filter((meal) => {
-            const mealDate = new Date(meal.createdDate).toLocaleDateString(
-              "en-CA"
-            );
-            const today = new Date().toLocaleDateString("en-CA");
+        {data?.meals.map((meal) => (
+          <div
+            key={meal._id}
+            className="card bg-base-100 image-full  h-80 shadow-sm"
+          >
+            <figure className="w-full h-full">
+              <img
+                className="w-full h-full object-cover"
+                src={meal.foodImage}
+                alt={meal.foodName}
+              />
+            </figure>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+            <div className="card-body bg-blur flex flex-col justify-between">
+              <div>
+                <h2 className="text-3xl font-bold mb-3">{meal.foodName}</h2>
 
-            return mealDate === today;
-          })
-          .map((meal) => (
-            <div
-              key={meal._id}
-              className="card bg-base-100 image-full  h-80 shadow-sm"
-            >
-              <figure className="w-full h-full">
-                <img
-                  className="w-full h-full object-cover"
-                  src={meal.foodImage}
-                  alt={meal.foodName}
-                />
-              </figure>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
-              <div className="card-body bg-blur flex flex-col justify-between">
-                <div>
-                  <h2 className="text-3xl font-bold mb-3">{meal.foodName}</h2>
+                {/* Chef Information */}
+                <div className="text-sm mb-2">
+                  <p className="font-semibold">Chef: {meal.chefName}</p>
+                </div>
 
-                  {/* Chef Information */}
-                  <div className="text-sm mb-2">
-                    <p className="font-semibold">Chef: {meal.chefName}</p>
-                  </div>
+                {/* Description */}
+                <p className="text-xs">
+                  {meal.foodDescription.split(".").slice(1).join("......")}
+                </p>
+              </div>
 
-                  {/* Description */}
-                  <p className="text-xs">
-                    {meal.foodDescription.split(".").slice(1).join("......")}
+              <div className="flex justify-between">
+                {/* Food Details at Bottom */}
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <p className="font-bold text-2xl">${meal.price}</p>
+                  <p className="flex items-center gap-1 text-lg">
+                    <span className="text-yellow-400">⭐</span>
+                    {meal.rating}
                   </p>
                 </div>
 
-                <div className="flex justify-between">
-                  {/* Food Details at Bottom */}
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <p className="font-bold text-2xl">${meal.price}</p>
-                    <p className="flex items-center gap-1 text-lg">
-                      <span className="text-yellow-400">⭐</span>
-                      {meal.rating}
-                    </p>
-                  </div>
-
-                  <div className="card-actions justify-end">
-                    <button className="btn btn-primary btn-lg text-white">
-                      Details
-                    </button>
-                  </div>
+                <div className="card-actions justify-end">
+                  <button className="btn btn-primary btn-lg text-white">
+                    Details
+                  </button>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </div>
   );
