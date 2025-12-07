@@ -2,10 +2,14 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
 import auth from "../../../Firebase/firebase.config";
 import Swal from "sweetalert2";
+import { useLocation, useNavigate } from "react-router";
 
 const provider = new GoogleAuthProvider();
 
 const SocialLogin = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || "/";
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -21,6 +25,7 @@ const SocialLogin = () => {
         timer: 2000,
         timerProgressBar: true,
       });
+      navigate(from, { replace: true });
 
       // Optional: Redirect or do something with the user data
       // console.log("User:", user);

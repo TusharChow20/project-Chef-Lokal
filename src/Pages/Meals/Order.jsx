@@ -288,7 +288,6 @@ const Order = () => {
                     )}
                   </div>
 
-                  {/* Order Status - Default */}
                   <div className="form-control">
                     <label className="label">
                       <span className="label-text flex items-center gap-2 font-semibold">
@@ -303,8 +302,6 @@ const Order = () => {
                       className="input input-bordered w-full bg-base-200 cursor-not-allowed"
                     />
                   </div>
-
-                  {/* Order Time - Auto-filled */}
                   <div className="form-control">
                     <label className="label">
                       <span className="label-text flex items-center gap-2 font-semibold">

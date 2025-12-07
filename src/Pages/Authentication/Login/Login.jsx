@@ -1,18 +1,21 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || "/";
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const { signIn } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleLoginSubmit = async (data) => {
     try {
@@ -28,6 +31,7 @@ const Login = () => {
         timer: 2000,
         timerProgressBar: true,
       });
+      navigate(from, { replace: true });
 
       // Optional: Redirect after successful login
       // navigate("/dashboard");
