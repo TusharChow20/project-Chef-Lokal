@@ -92,7 +92,7 @@ const Order = () => {
           });
 
           setTimeout(() => {
-            navigate("/my-orders");
+            navigate("/dashboard/my-orders");
           }, 2000);
         }
       } catch (error) {
