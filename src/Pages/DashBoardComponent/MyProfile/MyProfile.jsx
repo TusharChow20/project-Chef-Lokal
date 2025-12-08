@@ -165,7 +165,7 @@ const MyProfile = () => {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between border-b pb-3">
                 <span className="text-gray-100 font-medium md:text-xl">
                   User ID:
                 </span>
@@ -176,23 +176,65 @@ const MyProfile = () => {
             </div>
 
             {/* Action Buttons */}
-            {role === "user" && (
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => handleRoleChangeReq("chef")}
-                  disabled={hasChefRequest}
-                  className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
-                    hasChefRequest
-                      ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                      : "bg-orange-500 hover:bg-orange-600 text-white hover:shadow-lg"
-                  }`}
-                >
-                  {hasChefRequest ? "Request Pending" : "Be a Chef"}
-                </button>
+            {role === "user" &&
+              (userInfo.userStatus === "active" ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    onClick={() => handleRoleChangeReq("chef")}
+                    disabled={hasChefRequest}
+                    className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
+                      hasChefRequest
+                        ? "bg-gray-400 cursor-not-allowed text-gray-700"
+                        : "bg-orange-500 hover:bg-orange-600 text-white hover:shadow-lg"
+                    }`}
+                  >
+                    {hasChefRequest ? "Request Pending" : "Be a Chef"}
+                  </button>
+
+                  <button
+                    onClick={() => handleRoleChangeReq("admin")}
+                    disabled={hasAdminRequest}
+                    className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
+                      hasAdminRequest
+                        ? "bg-gray-400 cursor-not-allowed text-gray-700"
+                        : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
+                    }`}
+                  >
+                    {hasAdminRequest ? "Request Pending" : "Be an Admin"}
+                  </button>
+                </div>
+              ) : (
+                // ELSE PART — show disabled buttons or a message
+                <div className="grid grid-cols-2 gap-4 opacity-50">
+                  <button
+                    disabled
+                    className="bg-gray-400 text-gray-700 py-3 rounded-lg"
+                  >
+                    Be a Chef
+                  </button>
+                  <button
+                    disabled
+                    className="bg-gray-400 text-gray-700 py-3 rounded-lg"
+                  >
+                    Be an Admin
+                  </button>
+                </div>
+              ))}
+
+            {role === "chef" && (
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-gray-100 font-medium md:text-xl">
+                    Chef ID:
+                  </span>
+                  <span className="text-gray-100 text-lg font-mono wrap-anywhere text-end">
+                    {userInfo?.chefId}
+                  </span>
+                </div>
                 <button
                   onClick={() => handleRoleChangeReq("admin")}
                   disabled={hasAdminRequest}
-                  className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
+                  className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md w-full ${
                     hasAdminRequest
                       ? "bg-gray-400 cursor-not-allowed text-gray-700"
                       : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
@@ -201,20 +243,6 @@ const MyProfile = () => {
                   {hasAdminRequest ? "Request Pending" : "Be an Admin"}
                 </button>
               </div>
-            )}
-
-            {role === "chef" && (
-              <button
-                onClick={() => handleRoleChangeReq("admin")}
-                disabled={hasAdminRequest}
-                className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md w-full ${
-                  hasAdminRequest
-                    ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                    : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
-                }`}
-              >
-                {hasAdminRequest ? "Request Pending" : "Be an Admin"}
-              </button>
             )}
           </div>
         </div>
