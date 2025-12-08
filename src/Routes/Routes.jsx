@@ -19,6 +19,7 @@ import AdminOnlyRoute from "./AdminRoute";
 import CreateMeal from "../Pages/DashBoardComponent/CreateMeal/CreateMeal";
 import MangeRequest from "../Pages/DashBoardComponent/ManageRequest/MangeRequest";
 import PlatformStat from "../Pages/DashBoardComponent/PlatformStat/PlatformStat";
+import MyReviews from "../Pages/DashBoardComponent/MyReviews/MyReviews";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -78,6 +79,14 @@ const router = createBrowserRouter([
       {
         path: "my-profile",
         Component: MyProfile,
+      },
+      {
+        path: "my-orders",
+        Component: MyOrders,
+      },
+      {
+        path: "my-reviews",
+        Component: MyReviews,
       },
       {
         path: "my-orders",
