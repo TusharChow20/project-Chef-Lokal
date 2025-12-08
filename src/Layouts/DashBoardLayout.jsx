@@ -10,8 +10,10 @@ import {
   PanelLeftClose,
   PanelLeft,
 } from "lucide-react";
+import useRole from "../Hooks/useRole";
 
 const DashBoardLayout = () => {
+  const { role } = useRole();
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
