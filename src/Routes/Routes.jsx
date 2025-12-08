@@ -12,6 +12,7 @@ import AddReviews from "../Pages/Meals/AddReviews";
 import DashBoardLayout from "../Layouts/DashBoardLayout";
 import MyProfile from "../Pages/DashBoardComponent/MyProfile/MyProfile";
 import MyOrders from "../Pages/DashBoardComponent/MyOrders/MyOrders";
+import PendingOrders from "../Pages/DashBoardComponent/PendingOrder/PendingOrders";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: "my-orders",
         Component: MyOrders,
+      },
+      {
+        path: "pending-orders",
+        element: <PendingOrders />,
       },
     ],
   },

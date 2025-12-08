@@ -9,9 +9,12 @@ import {
   Heart,
   PanelLeftClose,
   PanelLeft,
+  WatchIcon,
 } from "lucide-react";
+import useRole from "../Hooks/useRole";
 
 const DashBoardLayout = () => {
+  const { role } = useRole();
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -73,50 +76,76 @@ const DashBoardLayout = () => {
                 <span className="is-drawer-close:hidden">My Profile</span>
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/dashboard/my-orders"
-                className={({ isActive }) =>
-                  `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
-                    isActive ? "active" : ""
-                  }`
-                }
-                data-tip="My Orders"
-              >
-                <ClipboardList className="size-5" />
-                <span className="is-drawer-close:hidden">My Orders</span>
-              </NavLink>
-            </li>
 
-            <li>
-              <NavLink
-                to="/dashboard/my-reviews"
-                className={({ isActive }) =>
-                  `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
-                    isActive ? "active" : ""
-                  }`
-                }
-                data-tip="My Reviews"
-              >
-                <Star className="size-5" />
-                <span className="is-drawer-close:hidden">My Reviews</span>
-              </NavLink>
-            </li>
+            {/* only for user --------------------- */}
+            {role !== "chef" && (
+              <>
+                <li>
+                  <NavLink
+                    to="/dashboard/my-orders"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="My Orders"
+                  >
+                    <ClipboardList className="size-5" />
+                    <span className="is-drawer-close:hidden">My Orders</span>
+                  </NavLink>
+                </li>
 
-            <li>
-              <NavLink
-                to="/dashboard/favorites"
-                className={({ isActive }) =>
-                  `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
-                    isActive ? "active" : ""
-                  }`
-                }
-                data-tip="Favorite Meals"
-              >
-                <Heart className="size-5" />
-                <span className="is-drawer-close:hidden">Favorite Meals</span>
-              </NavLink>
-            </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/my-reviews"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="My Reviews"
+                  >
+                    <Star className="size-5" />
+                    <span className="is-drawer-close:hidden">My Reviews</span>
+                  </NavLink>
+                </li>
+
+                <li>
+                  <NavLink
+                    to="/dashboard/favorites"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="Favorite Meals"
+                  >
+                    <Heart className="size-5" />
+                    <span className="is-drawer-close:hidden">
+                      Favorite Meals
+                    </span>
+                  </NavLink>
+                </li>
+              </>
+            )}
+
+            {/* //only for chef's---------------------- */}
+            {role === "chef" && (
+              <li>
+                <NavLink
+                  to="/dashboard/pending-orders"
+                  className={({ isActive }) =>
+                    `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                      isActive ? "active" : ""
+                    }`
+                  }
+                  data-tip="My Profile"
+                >
+                  <WatchIcon className="size-5" />
+                  <span className="is-drawer-close:hidden">Pending Order</span>
+                </NavLink>
+              </li>
+            )}
           </ul>
         </div>
       </div>
