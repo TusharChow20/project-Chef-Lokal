@@ -5,7 +5,6 @@ const OrderNow = () => {
   const handleOrderNow = () => {
     window.location.href = "/meals";
   };
-
   const handleBrowseRestaurants = () => {
     window.location.href = "/restaurants";
   };

@@ -11,6 +11,7 @@ import PrivateRoute from "./PrivateRoute";
 import AddReviews from "../Pages/Meals/AddReviews";
 import DashBoardLayout from "../Layouts/DashBoardLayout";
 import MyProfile from "../Pages/DashBoardComponent/MyProfile/MyProfile";
+import MyOrders from "../Pages/DashBoardComponent/MyOrders/MyOrders";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
       {
         path: "my-profile",
         Component: MyProfile,
+      },
+      {
+        path: "my-orders",
+        Component: MyOrders,
       },
     ],
   },
