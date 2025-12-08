@@ -4,8 +4,10 @@ import { Link } from "react-router";
 import { useAuth } from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import axios from "axios";
+import useAxiosSecurity from "../../../Hooks/useAxiosSecurity";
 
 const Registration = () => {
+  const axiosSecure = useAxiosSecurity();
   const { signUp, updateUserProfile } = useAuth();
   const {
     register,
@@ -30,13 +32,23 @@ const Registration = () => {
           }`,
           formData
         )
-        .then((res) => {
+        .then(async (res) => {
           //update registration
           const userProfile = {
             displayName: data.name,
             photoURL: res.data.data.url,
           };
           updateUserProfile(userProfile);
+
+          const userDataForMongo = {
+            email: data.email,
+            displayName: data.name,
+            photoURL: res.data.data.url,
+            address: data.address,
+            role: "user",
+            userStatus: "active",
+          };
+          await axiosSecure.post("/users", userDataForMongo);
         });
       // Success alert
       Swal.fire({

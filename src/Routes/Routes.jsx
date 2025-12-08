@@ -9,6 +9,7 @@ import MealDetails from "../Pages/Meals/MEalDetails";
 import Order from "../Pages/Meals/Order";
 import PrivateRoute from "./PrivateRoute";
 import AddReviews from "../Pages/Meals/AddReviews";
+import DashBoardLayout from "../Layouts/DashBoardLayout";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -56,6 +57,14 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashBoardLayout></DashBoardLayout>
+      </PrivateRoute>
+    ),
   },
 ]);
 
