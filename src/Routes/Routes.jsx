@@ -13,6 +13,12 @@ import DashBoardLayout from "../Layouts/DashBoardLayout";
 import MyProfile from "../Pages/DashBoardComponent/MyProfile/MyProfile";
 import MyOrders from "../Pages/DashBoardComponent/MyOrders/MyOrders";
 import PendingOrders from "../Pages/DashBoardComponent/PendingOrder/PendingOrders";
+import ChefRoute from "./ChefRoute";
+import ManageUser from "../Pages/DashBoardComponent/ManageUser/ManageUser";
+import AdminOnlyRoute from "./AdminRoute";
+import CreateMeal from "../Pages/DashBoardComponent/CreateMeal/CreateMeal";
+import MangeRequest from "../Pages/DashBoardComponent/ManageRequest/MangeRequest";
+import PlatformStat from "../Pages/DashBoardComponent/PlatformStat/PlatformStat";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -79,7 +85,51 @@ const router = createBrowserRouter([
       },
       {
         path: "pending-orders",
-        element: <PendingOrders />,
+        element: (
+          <ChefRoute>
+            <PendingOrders />
+          </ChefRoute>
+        ),
+      },
+      {
+        path: "create-meals",
+        element: (
+          <ChefRoute>
+            <CreateMeal></CreateMeal>
+          </ChefRoute>
+        ),
+      },
+      {
+        path: "order-requests",
+        element: (
+          <ChefRoute>
+            <PendingOrders />
+          </ChefRoute>
+        ),
+      },
+      {
+        path: "manage-user",
+        element: (
+          <AdminOnlyRoute>
+            <ManageUser />
+          </AdminOnlyRoute>
+        ),
+      },
+      {
+        path: "manage-request",
+        element: (
+          <AdminOnlyRoute>
+            <MangeRequest />
+          </AdminOnlyRoute>
+        ),
+      },
+      {
+        path: "platform-statistics",
+        element: (
+          <AdminOnlyRoute>
+            <PlatformStat />
+          </AdminOnlyRoute>
+        ),
       },
     ],
   },

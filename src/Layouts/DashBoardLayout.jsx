@@ -10,6 +10,9 @@ import {
   PanelLeftClose,
   PanelLeft,
   WatchIcon,
+  UserCheck2Icon,
+  GitGraph,
+  UserCog,
 } from "lucide-react";
 import useRole from "../Hooks/useRole";
 
@@ -78,7 +81,7 @@ const DashBoardLayout = () => {
             </li>
 
             {/* only for user --------------------- */}
-            {role !== "chef" && (
+            {role === "user" && (
               <>
                 <li>
                   <NavLink
@@ -139,12 +142,64 @@ const DashBoardLayout = () => {
                       isActive ? "active" : ""
                     }`
                   }
-                  data-tip="My Profile"
+                  data-tip="Manage Order"
                 >
                   <WatchIcon className="size-5" />
                   <span className="is-drawer-close:hidden">Pending Order</span>
                 </NavLink>
               </li>
+            )}
+
+            {/* //only admin----------------- */}
+            {role === "admin" && (
+              <>
+                <li>
+                  <NavLink
+                    to="/dashboard/manage-user"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="Mange User"
+                  >
+                    <UserCheck2Icon className="size-5" />
+                    <span className="is-drawer-close:hidden">Mange User</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/manage-request"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="Mange Request"
+                  >
+                    <UserCog className="size-5" />
+                    <span className="is-drawer-close:hidden">
+                      Mange Request
+                    </span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/platform-statistics"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="Platform Statistics"
+                  >
+                    <GitGraph className="size-5" />
+                    <span className="is-drawer-close:hidden">
+                      Platform Statistics
+                    </span>
+                  </NavLink>
+                </li>
+              </>
             )}
           </ul>
         </div>
