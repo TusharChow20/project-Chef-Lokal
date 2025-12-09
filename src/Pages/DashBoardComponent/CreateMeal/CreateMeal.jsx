@@ -113,10 +113,11 @@ const CreateMeal = () => {
         ingredients: ingredients,
         estimatedDeliveryTime: data.estimatedDeliveryTime,
         foodDescription: data.foodDescription,
-        chefExperience: data.chefExperience,
+        chefsExperience: data.chefExperience,
         chefId: data.chefId,
         userEmail: user.email,
-        createdAt: new Date().toISOString(),
+        deliveryArea: user.deliveryArea,
+        createdDate: new Date().toISOString(),
       };
 
       const response = await axiosSecure.post("/meals", mealData);
@@ -376,6 +377,24 @@ const CreateMeal = () => {
               {errors.chefExperience && (
                 <p className="text-red-400 text-sm mt-1">
                   {errors.chefExperience.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block text-gray-100 font-medium mb-2">
+                Delivery Area *
+              </label>
+              <textarea
+                {...register("deliveryArea", {
+                  required: "Chef's experience is required",
+                })}
+                rows="3"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Give Your Delivery Location"
+              />
+              {errors.deliveryArea && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.deliveryArea.message}
                 </p>
               )}
             </div>
