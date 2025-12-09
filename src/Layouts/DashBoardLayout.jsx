@@ -13,6 +13,9 @@ import {
   UserCheck2Icon,
   GitGraph,
   UserCog,
+  CookingPot,
+  PlusCircle,
+  HandGrab,
 } from "lucide-react";
 import useRole from "../Hooks/useRole";
 
@@ -134,20 +137,52 @@ const DashBoardLayout = () => {
 
             {/* //only for chef's---------------------- */}
             {role === "chef" && (
-              <li>
-                <NavLink
-                  to="/dashboard/pending-orders"
-                  className={({ isActive }) =>
-                    `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
-                      isActive ? "active" : ""
-                    }`
-                  }
-                  data-tip="Manage Order"
-                >
-                  <WatchIcon className="size-5" />
-                  <span className="is-drawer-close:hidden">Pending Order</span>
-                </NavLink>
-              </li>
+              <>
+                <li>
+                  <NavLink
+                    to="/dashboard/create-meals"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="Create meal"
+                  >
+                    <PlusCircle className="size-5" />
+                    <span className="is-drawer-close:hidden">Create meal</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/my-meals"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="My Meals"
+                  >
+                    <CookingPot className="size-5" />
+                    <span className="is-drawer-close:hidden">My Meals</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/pending-orders"
+                    className={({ isActive }) =>
+                      `is-drawer-close:tooltip is-drawer-close:tooltip-right ${
+                        isActive ? "active" : ""
+                      }`
+                    }
+                    data-tip="Order requests"
+                  >
+                    <HandGrab className="size-5" />
+                    <span className="is-drawer-close:hidden">
+                      Order requests
+                    </span>
+                  </NavLink>
+                </li>
+              </>
             )}
 
             {/* //only admin----------------- */}
