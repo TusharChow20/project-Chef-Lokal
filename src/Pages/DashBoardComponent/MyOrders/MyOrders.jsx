@@ -1,19 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "../../../Hooks/useAuth";
 import useAxiosSecurity from "../../../Hooks/useAxiosSecurity";
+import Swal from "sweetalert2";
 
 const MyOrders = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecurity();
 
-  const { data: allOrders = [], isLoading } = useQuery({
+  const { data: allOrders = [], isLoading, refetch } = useQuery({
     queryKey: ["orders", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/orders?email=${user.email}`);
       return res.data;
     },
   });
+
+  // Check for payment success/cancel in URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const canceled = params.get("canceled");
+
+    if (canceled === "true") {
+      Swal.fire({
+        icon: "info",
+        title: "Payment Cancelled",
+        text: "Your payment was cancelled. You can try again anytime.",
+        confirmButtonColor: "#f97316",
+      });
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -53,13 +71,36 @@ const MyOrders = () => {
     );
   };
 
-  const handlePayment = (order) => {
-    console.log("Processing payment for order:", order._id);
-    alert(
-      `Redirecting to payment for order: ${order.mealName} - $${(
-        order.price * order.quantity
-      ).toFixed(2)}`
-    );
+  const handlePayment = async (order) => {
+    try {
+      const cost = order.price * order.quantity;
+      
+      // Show loading
+      Swal.fire({
+        title: "Processing...",
+        text: "Redirecting to payment gateway",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      const res = await axiosSecure.post("/create-checkout-session", {
+        cost,
+        orderId: order._id,
+      });
+
+      // Redirect to Stripe checkout
+      window.location.href = res.data.url;
+    } catch (error) {
+      console.error("Payment error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Payment Failed",
+        text: "Failed to initiate payment. Please try again.",
+        confirmButtonColor: "#f97316",
+      });
+    }
   };
 
   if (isLoading) {

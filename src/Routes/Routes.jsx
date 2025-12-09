@@ -22,6 +22,7 @@ import PlatformStat from "../Pages/DashBoardComponent/PlatformStat/PlatformStat"
 import MyReviews from "../Pages/DashBoardComponent/MyReviews/MyReviews";
 import FavoriteMeal from "../Pages/DashBoardComponent/FavouriteMeal/FavoriteMeal";
 import ChefMeal from "../Pages/DashBoardComponent/ChefMeal/ChefMeal";
+import PaymentSuccess from "../Pages/DashBoardComponent/MyOrders/PaymentSuccess";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "/payment-success",
+        Component: PaymentSuccess,
+      },
     ],
   },
   {
@@ -94,6 +99,7 @@ const router = createBrowserRouter([
         path: "favorites",
         Component: FavoriteMeal,
       },
+
       {
         path: "pending-orders",
         element: (
