@@ -29,6 +29,7 @@ const MyOrders = () => {
   const getStatusColor = (status) => {
     const colors = {
       pending: "bg-yellow-100 text-yellow-800",
+      accepted: "bg-blue-100 text-blue-800",
       preparing: "bg-blue-100 text-blue-800",
       delivered: "bg-green-100 text-green-800",
       cancelled: "bg-red-100 text-red-800",
@@ -43,6 +44,22 @@ const MyOrders = () => {
       failed: "bg-red-100 text-red-800",
     };
     return colors[status?.toLowerCase()] || "bg-gray-100 text-gray-800";
+  };
+
+  const shouldShowPayButton = (order) => {
+    return (
+      order.orderStatus?.toLowerCase() === "accepted" &&
+      order.paymentStatus?.toLowerCase() === "pending"
+    );
+  };
+
+  const handlePayment = (order) => {
+    console.log("Processing payment for order:", order._id);
+    alert(
+      `Redirecting to payment for order: ${order.mealName} - $${(
+        order.price * order.quantity
+      ).toFixed(2)}`
+    );
   };
 
   if (isLoading) {
@@ -66,10 +83,9 @@ const MyOrders = () => {
           </span>
         </div>
 
-        {/* Empty State */}
         {allOrders.length === 0 ? (
-          <div className="rounded-lg shadow-md p-8 sm:p-12 text-center">
-            <p className="text-gray-500 text-base sm:text-lg">
+          <div className="rounded-lg shadow-md p-8 sm:p-12 text-center bg-gray-800">
+            <p className="text-gray-400 text-base sm:text-lg">
               No orders found
             </p>
           </div>
@@ -102,6 +118,9 @@ const MyOrders = () => {
                     </th>
                     <th className="px-3 lg:px-6 py-4 text-left text-sm md:text-base lg:text-lg font-bold text-gray-200 uppercase tracking-wider">
                       Payment
+                    </th>
+                    <th className="px-3 lg:px-6 py-4 text-center text-sm md:text-base lg:text-lg font-bold text-gray-200 uppercase tracking-wider">
+                      Action
                     </th>
                   </tr>
                 </thead>
@@ -165,6 +184,18 @@ const MyOrders = () => {
                           {order.paymentStatus}
                         </span>
                       </td>
+                      <td className="px-3 lg:px-6 py-5 text-center">
+                        {shouldShowPayButton(order) ? (
+                          <button
+                            onClick={() => handlePayment(order)}
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 text-sm md:text-base whitespace-nowrap"
+                          >
+                            Pay Now
+                          </button>
+                        ) : (
+                          <span className="text-gray-500 text-sm">-</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -175,21 +206,21 @@ const MyOrders = () => {
 
         {/* Summary Card */}
         {allOrders.length > 0 && (
-          <div className="mt-6 rounded-lg shadow-md p-4 sm:p-6">
+          <div className="mt-6 rounded-lg shadow-md p-4 sm:p-6 bg-gray-800 border border-gray-700">
             <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
               Order Summary
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-              <div className="text-center p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm text-gray-100 mb-1">
+              <div className="text-center p-3 sm:p-4 bg-gray-700 rounded-lg">
+                <p className="text-xs sm:text-sm text-gray-300 mb-1">
                   Total Orders
                 </p>
                 <p className="text-xl sm:text-2xl font-bold text-white">
                   {allOrders.length}
                 </p>
               </div>
-              <div className="text-center p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm text-gray-100 mb-1">
+              <div className="text-center p-3 sm:p-4 bg-gray-700 rounded-lg">
+                <p className="text-xs sm:text-sm text-gray-300 mb-1">
                   Total Spent
                 </p>
                 <p className="text-xl sm:text-2xl font-bold text-orange-600">
@@ -202,8 +233,8 @@ const MyOrders = () => {
                     .toFixed(2)}
                 </p>
               </div>
-              <div className="text-center p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm text-gray-100 mb-1">Pending</p>
+              <div className="text-center p-3 sm:p-4 bg-gray-700 rounded-lg">
+                <p className="text-xs sm:text-sm text-gray-300 mb-1">Pending</p>
                 <p className="text-xl sm:text-2xl font-bold text-yellow-600">
                   {
                     allOrders.filter(
@@ -212,8 +243,8 @@ const MyOrders = () => {
                   }
                 </p>
               </div>
-              <div className="text-center p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm text-gray-100 mb-1">
+              <div className="text-center p-3 sm:p-4 bg-gray-700 rounded-lg">
+                <p className="text-xs sm:text-sm text-gray-300 mb-1">
                   Delivered
                 </p>
                 <p className="text-xl sm:text-2xl font-bold text-green-600">
