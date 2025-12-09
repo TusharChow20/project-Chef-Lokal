@@ -112,6 +112,7 @@ const CreateMeal = () => {
         rating: 0,
         ingredients: ingredients,
         estimatedDeliveryTime: data.estimatedDeliveryTime,
+        foodDescription: data.foodDescription,
         chefExperience: data.chefExperience,
         chefId: data.chefId,
         userEmail: user.email,
@@ -340,7 +341,25 @@ const CreateMeal = () => {
                 </div>
               )}
             </div>
-
+            {/* food description  */}
+            <div>
+              <label className="block text-gray-100 font-medium mb-2">
+                Food Details *
+              </label>
+              <textarea
+                {...register("foodDescription", {
+                  required: "Give Food Description is required",
+                })}
+                rows="3"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Describe your food"
+              />
+              {errors.foodDescription && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.foodDescription.message}
+                </p>
+              )}
+            </div>
             {/* Chef Experience */}
             <div>
               <label className="block text-gray-100 font-medium mb-2">
@@ -372,7 +391,7 @@ const CreateMeal = () => {
                   required: "Chef ID is required",
                 })}
                 className="w-full cursor-not-allowed px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                value={userInfo.chefId}
+                value={userInfo?.chefId || ""}
                 readOnly
               />
               {errors.chefId && (
