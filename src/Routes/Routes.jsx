@@ -20,6 +20,7 @@ import CreateMeal from "../Pages/DashBoardComponent/CreateMeal/CreateMeal";
 import MangeRequest from "../Pages/DashBoardComponent/ManageRequest/MangeRequest";
 import PlatformStat from "../Pages/DashBoardComponent/PlatformStat/PlatformStat";
 import MyReviews from "../Pages/DashBoardComponent/MyReviews/MyReviews";
+import FavoriteMeal from "../Pages/DashBoardComponent/FavouriteMeal/FavoriteMeal";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -89,8 +90,8 @@ const router = createBrowserRouter([
         Component: MyReviews,
       },
       {
-        path: "my-orders",
-        Component: MyOrders,
+        path: "favorites",
+        Component: FavoriteMeal,
       },
       {
         path: "pending-orders",
