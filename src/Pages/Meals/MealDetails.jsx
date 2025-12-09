@@ -99,11 +99,6 @@ const MealDetails = () => {
     );
   }
 
-  const handleOrderNow = () => {
-    // Add your order logic here
-    alert("Order placed successfully!");
-  };
-
   return (
     <div className="min-h-screen  py-12 px-4">
       <div className="max-w-6xl mx-auto">
