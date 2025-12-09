@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
 import { Link, useParams } from "react-router";
 import {
@@ -11,11 +11,16 @@ import {
   Heart,
 } from "lucide-react";
 import { useAuth } from "../../Hooks/useAuth";
+import Swal from "sweetalert2";
 
 const MealDetails = () => {
   const { user } = useAuth();
+  // console.log(user);
+
   const { id } = useParams();
   const axiosSecure = useAxiosSecurity();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isCheckingFavorite, setIsCheckingFavorite] = useState(true);
 
   const { data: mealDetail, isLoading } = useQuery({
     queryKey: ["mealDetails", id],
@@ -23,6 +28,38 @@ const MealDetails = () => {
   });
 
   // console.log(mealDetail);
+
+  const { data: favoritesData } = useQuery({
+    queryKey: ["favorites", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      return await axiosSecure.get(`/favorites/${user.email}`);
+    },
+    enabled: !!user?.email,
+  });
+  useEffect(() => {
+    if (favoritesData?.data && mealDetail?.data) {
+      // Check if current meal is in favorites
+      const favorites = favoritesData.data;
+      const currentMealId = mealDetail.data._id;
+
+      // If favorites is an array
+      if (Array.isArray(favorites)) {
+        const isInFavorites = favorites.some(
+          (fav) => fav.mealId === currentMealId
+        );
+        setIsFavorite(isInFavorites);
+      }
+      // If favorites is a single object with mealId
+      else if (favorites.mealId === currentMealId) {
+        setIsFavorite(true);
+      }
+
+      setIsCheckingFavorite(false);
+    } else {
+      setIsCheckingFavorite(false);
+    }
+  }, [favoritesData, mealDetail]);
 
   if (isLoading) {
     return (
@@ -102,7 +139,7 @@ const MealDetails = () => {
 
   const meal = mealDetail?.data;
   const favouriteData = {
-    userEmail: user.userEmail,
+    userEmail: user.email,
     mealId: meal._id,
     mealName: meal.foodName,
     chefId: meal.chefId,
@@ -112,8 +149,50 @@ const MealDetails = () => {
   };
 
   const handleFavorite = async () => {
-    await axiosSecure.post("/favorites", favouriteData);
+    if (!user) {
+      Swal.fire({
+        icon: "warning",
+        title: "Please Login",
+        text: "You need to be logged in to add favorites",
+        confirmButtonColor: "#f97316",
+      });
+      return;
+    }
+
+    if (isFavorite) {
+      Swal.fire({
+        icon: "info",
+        title: "Already in Favorites",
+        text: "This meal is already in your favorites!",
+        confirmButtonColor: "#f97316",
+      });
+      return;
+    }
+
+    try {
+      const response = await axiosSecure.post("/favorites", favouriteData);
+
+      if (response.data) {
+        setIsFavorite(true);
+        Swal.fire({
+          icon: "success",
+          title: "Added to Favorites!",
+          text: `${meal.foodName} has been added to your favorites`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to add to favorites. Please try again!",
+        confirmButtonColor: "#f97316",
+      });
+    }
   };
+
   //loader
   if (!meal) {
     return (
@@ -143,9 +222,26 @@ const MealDetails = () => {
               <div>
                 <div className="flex items-center justify-between">
                   <h1 className="text-4xl font-bold  mb-4">{meal.foodName}</h1>
-                  <div onClick={handleFavorite}>
-                    <Heart></Heart>
-                  </div>
+                  <button
+                    onClick={handleFavorite}
+                    disabled={isCheckingFavorite}
+                    className={`transition-all duration-300 hover:scale-110 ${
+                      isCheckingFavorite
+                        ? "opacity-50 cursor-wait"
+                        : "cursor-pointer"
+                    }`}
+                    title={
+                      isFavorite ? "Already in favorites" : "Add to favorites"
+                    }
+                  >
+                    <Heart
+                      className={`w-7 h-7 ${
+                        isFavorite
+                          ? "fill-red-500 text-red-500"
+                          : "text-gray-400 hover:text-red-500"
+                      }`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex items-center gap-3 mb-6">
