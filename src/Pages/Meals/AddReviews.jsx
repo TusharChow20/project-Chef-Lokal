@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
 import { useAuth } from "../../Hooks/useAuth";
@@ -10,6 +10,8 @@ import Reviews from "../Home/Reviews";
 import PerFoodReview from "./PerFoodReview";
 
 const AddReviews = () => {
+  const queryClient = useQueryClient();
+
   const axiosSecure = useAxiosSecurity();
   const { user } = useAuth();
   const { id: mealId } = useParams();
@@ -35,6 +37,7 @@ const AddReviews = () => {
 
       reset();
       setRating(0);
+      queryClient.invalidateQueries(["reviews", mealId]);
     },
     onError: (error) => {
       Swal.fire({
