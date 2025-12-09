@@ -2,9 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
 import { Link, useParams } from "react-router";
-import { Star, Clock, MapPin, ChefHat, ShoppingCart } from "lucide-react";
+import {
+  Star,
+  Clock,
+  MapPin,
+  ChefHat,
+  ShoppingCart,
+  Heart,
+} from "lucide-react";
+import { useAuth } from "../../Hooks/useAuth";
 
 const MealDetails = () => {
+  const { user } = useAuth();
   const { id } = useParams();
   const axiosSecure = useAxiosSecurity();
 
@@ -12,6 +21,8 @@ const MealDetails = () => {
     queryKey: ["mealDetails", id],
     queryFn: async () => await axiosSecure.get(`mealDetails/${id}`),
   });
+
+  // console.log(mealDetail);
 
   if (isLoading) {
     return (
@@ -90,7 +101,20 @@ const MealDetails = () => {
   }
 
   const meal = mealDetail?.data;
+  const favouriteData = {
+    userEmail: user.userEmail,
+    mealId: meal._id,
+    mealName: meal.foodName,
+    chefId: meal.chefId,
+    chefName: meal.chefName,
+    price: meal.price,
+    addedTime: new Date().toISOString(),
+  };
 
+  const handleFavorite = async () => {
+    await axiosSecure.post("/favorites", favouriteData);
+  };
+  //loader
   if (!meal) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -117,7 +141,12 @@ const MealDetails = () => {
             </div>
             <div className="p-8 md:p-12 flex flex-col justify-between">
               <div>
-                <h1 className="text-4xl font-bold  mb-4">{meal.foodName}</h1>
+                <div className="flex items-center justify-between">
+                  <h1 className="text-4xl font-bold  mb-4">{meal.foodName}</h1>
+                  <div onClick={handleFavorite}>
+                    <Heart></Heart>
+                  </div>
+                </div>
 
                 <div className="flex items-center gap-3 mb-6">
                   <ChefHat className="w-5 h-5 text-orange-500" />
