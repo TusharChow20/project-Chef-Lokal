@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
 import { UtensilsCrossed, ChefHat, Calendar } from "lucide-react";
+import { Link } from "react-router";
 
 const DailyMenu = () => {
   const axiosSecure = useAxiosSecurity();
@@ -76,9 +77,12 @@ const DailyMenu = () => {
                 </div>
 
                 <div className="card-actions justify-end">
-                  <button className="btn btn-primary btn-lg text-white">
-                    Details
-                  </button>
+                  <Link
+                    to={`/mealDetails/${meal._id}`}
+                    className="btn btn-primary w-full text-white"
+                  >
+                    View Details
+                  </Link>
                 </div>
               </div>
             </div>
