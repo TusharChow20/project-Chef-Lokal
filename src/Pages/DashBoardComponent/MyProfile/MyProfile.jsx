@@ -176,71 +176,78 @@ const MyProfile = () => {
             </div>
 
             {/* Action Buttons */}
-            {role === "user" &&
-              (userInfo.userStatus === "active" ? (
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={() => handleRoleChangeReq("chef")}
-                    disabled={hasChefRequest}
-                    className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
-                      hasChefRequest
-                        ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                        : "bg-orange-500 hover:bg-orange-600 text-white hover:shadow-lg"
-                    }`}
-                  >
-                    {hasChefRequest ? "Request Pending" : "Be a Chef"}
-                  </button>
+            {/* Action Buttons */}
+            {role === "user" && (
+              <>
+                {userInfo?.userStatus === "fraud" ? (
+                  // FRAUD BLOCK UI
+                  <div className="mt-6 text-center bg-red-600/20 border border-red-500 px-4 py-6 rounded-xl">
+                    <h2 className="text-xl font-bold text-red-400 mb-2">
+                      Account Restricted
+                    </h2>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      Your account has been flagged for suspicious activity. You
+                      cannot request Chef or Admin roles at this time.
+                    </p>
+                  </div>
+                ) : (
+                  // NORMAL BUTTONS WHEN ACTIVE
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      onClick={() => handleRoleChangeReq("chef")}
+                      disabled={hasChefRequest}
+                      className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
+                        hasChefRequest
+                          ? "bg-gray-400 cursor-not-allowed text-gray-700"
+                          : "bg-orange-500 hover:bg-orange-600 text-white hover:shadow-lg"
+                      }`}
+                    >
+                      {hasChefRequest ? "Request Pending" : "Be a Chef"}
+                    </button>
 
-                  <button
-                    onClick={() => handleRoleChangeReq("admin")}
-                    disabled={hasAdminRequest}
-                    className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
-                      hasAdminRequest
-                        ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                        : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
-                    }`}
-                  >
-                    {hasAdminRequest ? "Request Pending" : "Be an Admin"}
-                  </button>
-                </div>
-              ) : (
-                // ELSE PART — show disabled buttons or a message
-                <div className="grid grid-cols-2 gap-4 opacity-50">
-                  <button
-                    disabled
-                    className="bg-gray-400 text-gray-700 py-3 rounded-lg"
-                  >
-                    Be a Chef
-                  </button>
-                  <button
-                    disabled
-                    className="bg-gray-400 text-gray-700 py-3 rounded-lg"
-                  >
-                    Be an Admin
-                  </button>
-                </div>
-              ))}
+                    <button
+                      onClick={() => handleRoleChangeReq("admin")}
+                      disabled={hasAdminRequest}
+                      className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md ${
+                        hasAdminRequest
+                          ? "bg-gray-400 cursor-not-allowed text-gray-700"
+                          : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
+                      }`}
+                    >
+                      {hasAdminRequest ? "Request Pending" : "Be an Admin"}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
 
             {role === "chef" && (
               <div>
+                {/* Chef ID */}
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-gray-100 font-medium md:text-xl">
                     Chef ID:
                   </span>
-                  <span className="text-gray-100 text-lg font-mono wrap-anywhere text-end">
+                  <span className="text-gray-100 text-lg font-mono break-all text-end">
                     {userInfo?.chefId}
                   </span>
                 </div>
+
+                {/* Admin Request Button */}
                 <button
                   onClick={() => handleRoleChangeReq("admin")}
-                  disabled={hasAdminRequest}
+                  disabled={hasAdminRequest || userInfo.userStatus === "fraud"}
                   className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md w-full ${
-                    hasAdminRequest
+                    hasAdminRequest || userInfo.userStatus === "fraud"
                       ? "bg-gray-400 cursor-not-allowed text-gray-700"
                       : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
                   }`}
                 >
-                  {hasAdminRequest ? "Request Pending" : "Be an Admin"}
+                  {userInfo.userStatus === "fraud"
+                    ? "Access Restricted"
+                    : hasAdminRequest
+                    ? "Request Pending"
+                    : "Be an Admin"}
                 </button>
               </div>
             )}

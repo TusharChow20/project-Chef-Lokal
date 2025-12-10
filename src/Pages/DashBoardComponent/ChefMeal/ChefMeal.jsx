@@ -9,7 +9,6 @@ import { useAuth } from "../../../Hooks/useAuth";
 const ChefMeal = () => {
   const { user } = useAuth();
 
-
   const axiosSecure = useAxiosSecurity();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
