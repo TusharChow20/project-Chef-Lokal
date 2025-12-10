@@ -25,6 +25,7 @@ import ChefMeal from "../Pages/DashBoardComponent/ChefMeal/ChefMeal";
 import PaymentSuccess from "../Pages/DashBoardComponent/MyOrders/PaymentSuccess";
 import LoadingFallback from "../Pages/Home/Loading/LoadingScreen";
 import Error404 from "../Pages/Home/Error/Error";
+import Services from "../Componnents/Services";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/meals",
         Component: Meals,
+      },
+      {
+        path: "/services",
+        Component: Services,
       },
       {
         path: "/mealDetails/:id",
