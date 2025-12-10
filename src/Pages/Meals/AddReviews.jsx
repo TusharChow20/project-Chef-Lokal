@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import useAxiosSecurity from "../../Hooks/useAxiosSecurity";
 import { useAuth } from "../../Hooks/useAuth";
@@ -19,6 +19,13 @@ const AddReviews = () => {
   const [rating, setRating] = useState(0);
 
   const { register, handleSubmit, reset } = useForm();
+  const { data: userInfo } = useQuery({
+    queryKey: ["user", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users?email=${user.email}`);
+      return res.data;
+    },
+  });
 
   // --- USE MUTATION FOR SENDING DATA ---
   const { mutateAsync, isPending } = useMutation({
@@ -118,9 +125,20 @@ const AddReviews = () => {
             ></textarea>
           </div>
 
-          <button disabled={isPending} className="btn btn-neutral w-full mt-4">
-            {isPending ? "Submitting..." : "Submit Review"}
-          </button>
+          {userInfo.userStatus === "active" ? (
+            <button
+              disabled={isPending}
+              className="btn btn-neutral w-full mt-4"
+            >
+              {isPending ? "Submitting..." : "Submit Review"}
+            </button>
+          ) : (
+            <>
+              <span className="btn btn-neutral w-full mt-4">
+                Account Restricted
+              </span>
+            </>
+          )}
         </form>
       </div>
     </div>

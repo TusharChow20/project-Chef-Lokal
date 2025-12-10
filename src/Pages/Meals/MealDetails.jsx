@@ -26,6 +26,13 @@ const MealDetails = () => {
     queryKey: ["mealDetails", id],
     queryFn: async () => await axiosSecure.get(`mealDetails/${id}`),
   });
+  const { data: userInfo } = useQuery({
+    queryKey: ["user", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users?email=${user.email}`);
+      return res.data;
+    },
+  });
 
   // console.log(mealDetail);
 
@@ -287,13 +294,19 @@ const MealDetails = () => {
                       ${meal.price}
                     </p>
                   </div>
-                  <Link
-                    to={`/orders/${meal._id}`}
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    Order Now
-                  </Link>
+                  {userInfo.userStatus === "active" ? (
+                    <Link
+                      to={`/orders/${meal._id}`}
+                      className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      Order Now
+                    </Link>
+                  ) : (
+                    <button className="btn">
+                      <span className="text-warning">Account Restricted</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
