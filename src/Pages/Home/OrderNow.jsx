@@ -1,14 +1,8 @@
 import React from "react";
 import { ArrowRight, Utensils, ChefHat, Clock } from "lucide-react";
+import { Link } from "react-router";
 
 const OrderNow = () => {
-  const handleOrderNow = () => {
-    window.location.href = "/meals";
-  };
-  const handleBrowseRestaurants = () => {
-    window.location.href = "/restaurants";
-  };
-
   return (
     <div className="relative py-24 px-4 overflow-hidden">
       <div className="absolute inset-0 "></div>
@@ -30,8 +24,8 @@ const OrderNow = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <button
-                onClick={handleOrderNow}
+              <Link
+                to={"/meals"}
                 className="group bg-white text-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-300 hover:text-purple-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-2xl hover:shadow-yellow-300/50 hover:scale-105"
               >
                 Order Now
@@ -39,14 +33,14 @@ const OrderNow = () => {
                   className="group-hover:translate-x-1 transition-transform"
                   size={24}
                 />
-              </button>
+              </Link>
 
-              <button
-                onClick={handleBrowseRestaurants}
+              <Link
+                to={"/meals"}
                 className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full font-bold text-lg border-2 border-white hover:bg-white hover:text-purple-600 transition-all duration-300 flex items-center justify-center gap-2"
               >
                 Browse Menu
-              </button>
+              </Link>
             </div>
 
             {/* Features */}
@@ -136,7 +130,8 @@ const OrderNow = () => {
             <span className="bg-yellow-300 text-purple-700 px-6 py-2 rounded-full font-bold text-xl">
               FIRST25
             </span>
-            <span className="text-lg">for 25% off your first order!</span>
+            <span className="text-lg">for 0% off your first order!</span>
+            
           </div>
         </div>
       </div>

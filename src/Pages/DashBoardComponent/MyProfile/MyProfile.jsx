@@ -244,7 +244,7 @@ const MyProfile = () => {
                       : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
                   }`}
                 >
-                  {userInfo?.userStatus === "fraud"
+                  {userInfo.userStatus === "fraud"
                     ? "Access Restricted"
                     : hasAdminRequest
                     ? "Request Pending"

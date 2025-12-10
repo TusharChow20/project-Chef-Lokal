@@ -119,7 +119,7 @@ const Login = () => {
               Register
             </Link>
           </div>
-          <SocialLogin></SocialLogin>
+          {/* <SocialLogin></SocialLogin> */}
         </fieldset>
       </form>
     </div>

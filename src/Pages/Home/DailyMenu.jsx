@@ -9,7 +9,7 @@ const DailyMenu = () => {
   const { data } = useQuery({
     queryKey: ["/meals"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/meals");
+      const res = await axiosSecure.get("/home/meals");
       return res.data;
     },
   });

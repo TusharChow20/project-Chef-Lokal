@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -8,6 +8,9 @@ import useAxiosSecurity from "../../../Hooks/useAxiosSecurity";
 
 const Registration = () => {
   const axiosSecure = useAxiosSecurity();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || "/";
   const { signUp, updateUserProfile } = useAuth();
   const {
     register,
@@ -49,6 +52,7 @@ const Registration = () => {
             userStatus: "active",
           };
           await axiosSecure.post("/users", userDataForMongo);
+          navigate(from, { replace: true });
         });
       // Success alert
       Swal.fire({
