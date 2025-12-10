@@ -26,7 +26,10 @@ const Navbar = () => {
     ];
 
     if (user) {
-      return [...baseItems, { label: "Dashboard", href: "/dashboard" }];
+      return [
+        ...baseItems,
+        { label: "Dashboard", href: "/dashboard/my-profile" },
+      ];
     } else {
       return [...baseItems, { label: "Login", href: "/login" }];
     }

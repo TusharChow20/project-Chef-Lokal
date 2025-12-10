@@ -211,6 +211,7 @@ const MealDetails = () => {
 
   return (
     <div className="min-h-screen  py-12 px-4">
+      <title>{meal.foodName}</title>
       <div className="max-w-6xl mx-auto">
         <div className=" rounded-2xl shadow-2xl overflow-hidden">
           <div className="grid md:grid-cols-2 gap-0">

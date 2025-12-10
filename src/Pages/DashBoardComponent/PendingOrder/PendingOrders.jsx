@@ -103,7 +103,7 @@ const PendingOrders = () => {
 
   const isButtonDisabled = (order, buttonType) => {
     const status = order.orderStatus?.toLowerCase();
-    
+
     if (status === "cancelled" || status === "delivered") {
       return true;
     }
@@ -130,6 +130,7 @@ const PendingOrders = () => {
 
   return (
     <div className="min-h-screen py-4 px-4 sm:py-8 sm:px-6 lg:px-8">
+      <title>Order Request</title>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">

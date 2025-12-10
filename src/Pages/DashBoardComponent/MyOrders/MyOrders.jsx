@@ -3,12 +3,15 @@ import React, { useEffect } from "react";
 import { useAuth } from "../../../Hooks/useAuth";
 import useAxiosSecurity from "../../../Hooks/useAxiosSecurity";
 import Swal from "sweetalert2";
-
 const MyOrders = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecurity();
 
-  const { data: allOrders = [], isLoading, refetch } = useQuery({
+  const {
+    data: allOrders = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["orders", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/orders?email=${user.email}`);
@@ -74,7 +77,7 @@ const MyOrders = () => {
   const handlePayment = async (order) => {
     try {
       const cost = order.price * order.quantity;
-      
+
       // Show loading
       Swal.fire({
         title: "Processing...",
@@ -113,6 +116,9 @@ const MyOrders = () => {
 
   return (
     <div className="min-h-screen py-4 px-4 sm:py-8 sm:px-6 lg:px-8">
+      <>
+        <title>My-Orders</title>
+      </>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">

@@ -153,6 +153,7 @@ const CreateMeal = () => {
 
   return (
     <>
+      <title>Create Meal</title>
       {userInfo?.userStatus === "fraud" ? (
         <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
           <div className="max-w-md w-full bg-gray-800 p-8 rounded-2xl shadow-2xl text-center border border-red-600/40">

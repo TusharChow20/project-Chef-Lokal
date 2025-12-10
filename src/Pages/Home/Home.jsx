@@ -8,6 +8,7 @@ import OrderNow from "./OrderNow";
 const Home = () => {
   return (
     <>
+      <title>Home- Chef Lokal</title>
       <Hero></Hero>
       <DailyMenu></DailyMenu>
       <Reviews></Reviews>

@@ -193,6 +193,7 @@ const MyReviews = () => {
 
   return (
     <div className="min-h-screen py-8 px-4">
+      <title>My Reviews</title>
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-white">My Reviews</h1>
 

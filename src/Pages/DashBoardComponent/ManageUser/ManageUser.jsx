@@ -78,6 +78,7 @@ const ManageUser = () => {
 
   return (
     <div className="container mx-auto p-6">
+      <title>Manage Users</title>
       <div className=" rounded-lg shadow-lg overflow-hidden">
         <div className="px-6 py-4 ">
           <h2 className="text-2xl font-bold text-white">User Management</h2>

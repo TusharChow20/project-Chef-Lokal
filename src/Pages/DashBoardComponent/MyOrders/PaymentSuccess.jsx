@@ -7,7 +7,9 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecurity();
+
   const [isVerifying, setIsVerifying] = useState(true);
+  const [paymentDetails, setPaymentDetails] = useState(null);
 
   useEffect(() => {
     const verifyPayment = async () => {
@@ -20,10 +22,8 @@ const PaymentSuccess = () => {
           title: "Invalid Payment",
           text: "Payment verification failed. Missing session information.",
           confirmButtonColor: "#f97316",
-        }).then(() => {
-          navigate("/dashboard/my-orders");
         });
-        return;
+        return navigate("/dashboard/my-orders");
       }
 
       try {
@@ -33,36 +33,30 @@ const PaymentSuccess = () => {
         });
 
         if (res.data.success) {
+          setPaymentDetails(res.data.payment);
           setIsVerifying(false);
+
           Swal.fire({
             icon: "success",
             title: "Payment Successful!",
-            html: `
-              <p>Your payment has been processed successfully.</p>
-              <p class="mt-2 text-gray-600">Amount: $${res.data.payment.amount}</p>
-              <p class="text-gray-600">Order: ${res.data.payment.mealName}</p>
-            `,
-            confirmButtonColor: "#10b981",
-            confirmButtonText: "View My Orders",
-          }).then(() => {
-            navigate("/dashboard/my-orders");
+            text: "Your payment has been verified.",
+            timer: 1500,
+            showConfirmButton: false,
           });
         }
       } catch (error) {
-        console.error("Payment verification error:", error);
         Swal.fire({
           icon: "error",
           title: "Verification Failed",
           text: "Failed to verify payment. Please contact support.",
           confirmButtonColor: "#f97316",
-        }).then(() => {
-          navigate("/dashboard/my-orders");
         });
+        navigate("/dashboard/my-orders");
       }
     };
 
     verifyPayment();
-  }, [searchParams, navigate, axiosSecure]);
+  }, [searchParams, axiosSecure, navigate]);
 
   if (isVerifying) {
     return (
@@ -74,7 +68,29 @@ const PaymentSuccess = () => {
     );
   }
 
-  return null;
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen  p-6">
+      <div className="bg-gray-800 p-8 rounded-xl shadow-xl text-center max-w-md w-full">
+        <h1 className="text-3xl font-bold text-green-400 mb-4">
+          Payment Successful 🎉
+        </h1>
+
+        <p className="text-gray-300 mb-2">
+          Your payment has been processed successfully.
+        </p>
+
+        <p className="text-gray-400 mb-1">Amount: ${paymentDetails?.amount}</p>
+        <p className="text-gray-400 mb-6">Order: {paymentDetails?.mealName}</p>
+
+        <button
+          onClick={() => navigate("/dashboard/my-orders")}
+          className="px-6 py-3 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition"
+        >
+          Track Your Order
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default PaymentSuccess;

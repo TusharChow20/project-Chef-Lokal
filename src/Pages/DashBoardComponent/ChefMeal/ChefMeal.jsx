@@ -166,6 +166,7 @@ const ChefMeal = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <title>My Meals</title>
       <h1 className="text-3xl font-bold mb-8 text-white">My Meals</h1>
 
       {myMeals.length === 0 ? (

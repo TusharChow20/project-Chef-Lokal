@@ -106,6 +106,7 @@ const Meals = () => {
 
   return (
     <div>
+      <title>Meals</title>
       <h1 className="text-3xl font-bold mb-6 px-3 mt-3 md:mt-4 text-center">
         Our Meals
       </h1>

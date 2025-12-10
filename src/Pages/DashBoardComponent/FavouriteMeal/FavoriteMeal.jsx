@@ -91,6 +91,7 @@ const FavoriteMeal = () => {
 
   return (
     <div className="min-h-screen py-12 px-4">
+      <title>Favorite Meals</title>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

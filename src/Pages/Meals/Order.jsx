@@ -122,6 +122,7 @@ const Order = () => {
   if (!mealData) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <title>Orders</title>
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold mb-4">Meal not found</h2>
           <button

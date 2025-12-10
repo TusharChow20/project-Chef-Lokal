@@ -165,6 +165,7 @@ const ManageRequest = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <title>Manage Request</title>
       <div className="mb-6">
         <h1 className="text-3xl font-bold ">Manage Role Change Requests</h1>
         <p className="text-gray-100 mt-2">Total Requests: {reqData.length}</p>
