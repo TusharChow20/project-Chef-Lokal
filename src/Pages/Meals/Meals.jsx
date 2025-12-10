@@ -6,7 +6,7 @@ import { Link } from "react-router";
 
 const Meals = () => {
   const axiosSecure = useAxiosSecurity();
-  const limit = 6;
+  const limit = 10;
   const [sortOrder, setSortOrder] = useState(null);
 
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
