@@ -237,14 +237,14 @@ const MyProfile = () => {
                 {/* Admin Request Button */}
                 <button
                   onClick={() => handleRoleChangeReq("admin")}
-                  disabled={hasAdminRequest || userInfo.userStatus === "fraud"}
+                  disabled={hasAdminRequest || userInfo?.userStatus === "fraud"}
                   className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md w-full ${
-                    hasAdminRequest || userInfo.userStatus === "fraud"
+                    hasAdminRequest || userInfo?.userStatus === "fraud"
                       ? "bg-gray-400 cursor-not-allowed text-gray-700"
                       : "bg-purple-100 hover:bg-purple-300 text-black hover:shadow-lg"
                   }`}
                 >
-                  {userInfo.userStatus === "fraud"
+                  {userInfo?.userStatus === "fraud"
                     ? "Access Restricted"
                     : hasAdminRequest
                     ? "Request Pending"

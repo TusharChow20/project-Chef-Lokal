@@ -126,7 +126,7 @@ const AddReviews = () => {
             ></textarea>
           </div>
 
-          {userInfo.userStatus === "active" ? (
+          {userInfo?.userStatus === "active" ? (
             <button
               disabled={isPending}
               className="btn btn-neutral w-full mt-4"

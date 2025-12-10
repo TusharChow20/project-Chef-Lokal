@@ -295,7 +295,7 @@ const MealDetails = () => {
                       ${meal.price}
                     </p>
                   </div>
-                  {userInfo.userStatus === "active" ? (
+                  {userInfo?.userStatus === "active" ? (
                     <Link
                       to={`/orders/${meal._id}`}
                       className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"

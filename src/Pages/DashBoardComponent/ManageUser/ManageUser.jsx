@@ -65,7 +65,7 @@ const ManageUser = () => {
   };
 
   const shouldShowFraudButton = (user) => {
-    return user.role !== "admin" && user.userStatus !== "fraud";
+    return user?.role !== "admin" && user?.userStatus !== "fraud";
   };
 
   if (isUsersLoading) {
@@ -150,12 +150,12 @@ const ManageUser = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        user.userStatus === "active"
+                        user?.userStatus === "active"
                           ? "bg-green-100 text-green-800"
                           : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {user.userStatus}
+                      {user?.userStatus}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
