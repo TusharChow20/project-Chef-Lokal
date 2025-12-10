@@ -8,7 +8,26 @@ import {
   updateProfile,
 } from "firebase/auth";
 import auth from "../Firebase/firebase.config";
+import Lottie from "lottie-react";
 
+const AuthLoading = () => {
+  const [animationData, setAnimationData] = useState(null);
+
+  useEffect(() => {
+    fetch("/loading.json")
+      .then((res) => res.json())
+      .then((data) => setAnimationData(data));
+    // .catch((err) => console.error("Failed to load animation:", err));
+  }, []);
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-64 h-64">
+        {animationData && <Lottie animationData={animationData} loop={true} />}
+      </div>
+    </div>
+  );
+};
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,6 +55,10 @@ const AuthProvider = ({ children }) => {
   }, []);
   //all info send
   const authInfo = { signUp, updateUserProfile, signIn, user, logOut, loading };
+
+  if (loading) {
+    return <AuthLoading />;
+  }
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );

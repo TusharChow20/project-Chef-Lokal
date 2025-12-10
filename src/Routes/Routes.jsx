@@ -23,10 +23,13 @@ import MyReviews from "../Pages/DashBoardComponent/MyReviews/MyReviews";
 import FavoriteMeal from "../Pages/DashBoardComponent/FavouriteMeal/FavoriteMeal";
 import ChefMeal from "../Pages/DashBoardComponent/ChefMeal/ChefMeal";
 import PaymentSuccess from "../Pages/DashBoardComponent/MyOrders/PaymentSuccess";
+import LoadingFallback from "../Pages/Home/Loading/LoadingScreen";
+import Error404 from "../Pages/Home/Error/Error";
 const router = createBrowserRouter([
   {
     path: "/",
     Component: HomeLayout,
+    HydrateFallback: LoadingFallback,
     children: [
       {
         index: true,
@@ -157,6 +160,10 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "/*",
+    Component: Error404,
   },
 ]);
 
