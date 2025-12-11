@@ -27,6 +27,17 @@ const AddReviews = () => {
     },
   });
 
+  const { data: mealDetails } = useQuery({
+    queryKey: ["meal", mealId],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/mealDetails/${mealId}`);
+      return res.data;
+    },
+  });
+
+  const mealName = mealDetails?.foodName;
+  // console.log(mealName);
+
   // --- USE MUTATION FOR SENDING DATA ---
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (payload) => {
@@ -63,6 +74,13 @@ const AddReviews = () => {
         title: "Please select a rating",
       });
     }
+    if (!mealName) {
+      return Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Meal information is loading. Please try again.",
+      });
+    }
 
     const payload = {
       userName: user.displayName,
@@ -71,6 +89,7 @@ const AddReviews = () => {
       mealId: mealId,
       reviewText: data.comment,
       rating: rating,
+      mealName: mealName,
       reviewDate: new Date().toISOString(),
     };
 

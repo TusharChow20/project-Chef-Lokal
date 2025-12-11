@@ -118,7 +118,7 @@ const CreateMeal = () => {
         chefsExperience: data.chefExperience,
         chefId: data.chefId,
         userEmail: user.email,
-        deliveryArea: user.deliveryArea,
+        deliveryArea: data.deliveryArea,
         createdDate: new Date().toISOString(),
       };
 
@@ -442,7 +442,7 @@ const CreateMeal = () => {
                   </label>
                   <textarea
                     {...register("deliveryArea", {
-                      required: "Chef's experience is required",
+                      required: "Delivery Location is required",
                     })}
                     rows="3"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"

@@ -17,6 +17,10 @@ const MyOrders = () => {
       const res = await axiosSecure.get(`/orders?email=${user.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
+    refetchInterval: 3000,
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: true,
   });
 
   // Check for payment success/cancel in URL

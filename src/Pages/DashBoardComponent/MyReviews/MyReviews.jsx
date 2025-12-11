@@ -229,16 +229,7 @@ const MyReviews = () => {
                 className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-orange-500 transition-all duration-300 flex flex-col h-80"
               >
                 {/* Meal Image */}
-                {review.mealImage && (
-                  <div className="w-full h-48 overflow-hidden flex-shrink-0">
-                    <img
-                      src={review.mealImage}
-                      alt={review.mealName || review.mealTitle}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-
+                
                 <div className="p-6 flex flex-col flex-1 overflow-hidden">
                   {/* Meal Name */}
                   <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 flex-shrink-0">

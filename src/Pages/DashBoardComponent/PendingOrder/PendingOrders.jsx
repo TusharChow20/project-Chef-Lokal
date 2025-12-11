@@ -25,6 +25,9 @@ const PendingOrders = () => {
       return res.data;
     },
     enabled: !!userInfo?.chefId,
+    refetchInterval: 3000,
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: true,
   });
 
   // Mutation for updating order status
