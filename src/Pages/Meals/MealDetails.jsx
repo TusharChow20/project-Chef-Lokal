@@ -37,7 +37,7 @@ const MealDetails = () => {
   // console.log(mealDetail);
 
   const { data: favoritesData } = useQuery({
-    queryKey: ["favorites", user?.email],
+    queryKey: ["favoriteCheck", user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
       return await axiosSecure.get(`/favorites/${user.email}`);

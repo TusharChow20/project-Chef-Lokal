@@ -17,10 +17,12 @@ const FavoriteMeal = () => {
     queryKey: ["favorites", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`favorites/all/${user.email}`);
-      return res.data;
+      // return res.data;
+      return Array.isArray(res.data) ? res.data : [];
     },
     enabled: !!user?.email,
   });
+  const safeAllFavItem = Array.isArray(allFavItem) ? allFavItem : [];
 
   const handleDelete = async (id, mealName) => {
     Swal.fire({
@@ -100,16 +102,16 @@ const FavoriteMeal = () => {
             <h1 className="text-4xl font-bold text-white">My Favorite Meals</h1>
           </div>
           <p className="text-gray-400 ml-11">
-            {allFavItem.length === 0
+            {safeAllFavItem.length === 0
               ? "You haven't added any favorites yet"
-              : `You have ${allFavItem.length} favorite ${
-                  allFavItem.length === 1 ? "meal" : "meals"
+              : `You have ${safeAllFavItem.length} favorite ${
+                  safeAllFavItem.length === 1 ? "meal" : "meals"
                 }`}
           </p>
         </div>
 
         {/* Empty State */}
-        {allFavItem.length === 0 ? (
+        {safeAllFavItem.length === 0 ? (
           <div className="bg-gray-800 rounded-2xl p-12 text-center">
             <Heart className="w-24 h-24 text-gray-600 mx-auto mb-4" />
             <h2 className="text-2xl font-semibold text-gray-300 mb-2">
@@ -145,7 +147,7 @@ const FavoriteMeal = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-700">
-                    {allFavItem.map((item) => (
+                    {safeAllFavItem.map((item) => (
                       <tr
                         key={item._id}
                         className="hover:bg-gray-700 transition-colors duration-200"
@@ -202,7 +204,7 @@ const FavoriteMeal = () => {
 
             {/* Mobile Card View */}
             <div className="md:hidden space-y-4">
-              {allFavItem.map((item) => (
+              {safeAllFavItem.map((item) => (
                 <div
                   key={item._id}
                   className="bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-700"

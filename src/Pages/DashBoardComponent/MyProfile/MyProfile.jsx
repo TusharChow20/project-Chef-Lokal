@@ -191,8 +191,16 @@ const MyProfile = () => {
                       cannot request Chef or Admin roles at this time.
                     </p>
                   </div>
+                ) : // NORMAL BUTTONS WHEN ACTIVE
+                userInfo?.userStatus === "rejected" ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md bg-gray-400 cursor-not-allowed text-gray-700 w-full`}
+                    >
+                      Your Request Denied
+                    </button>
+                  </div>
                 ) : (
-                  // NORMAL BUTTONS WHEN ACTIVE
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       onClick={() => handleRoleChangeReq("chef")}
