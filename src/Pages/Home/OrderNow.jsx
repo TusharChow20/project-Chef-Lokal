@@ -131,7 +131,6 @@ const OrderNow = () => {
               FIRST25
             </span>
             <span className="text-lg">for 0% off your first order!</span>
-            
           </div>
         </div>
       </div>
