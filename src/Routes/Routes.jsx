@@ -26,6 +26,8 @@ import PaymentSuccess from "../Pages/DashBoardComponent/MyOrders/PaymentSuccess"
 import LoadingFallback from "../Pages/Home/Loading/LoadingScreen";
 import Error404 from "../Pages/Home/Error/Error";
 import Services from "../Componnents/Services";
+import Contact from "../Pages/Home/subpage/Contact";
+import About from "../Pages/Home/subpage/About";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: "/services",
         Component: Services,
+      },
+      {
+        path: "/contact",
+        Component: Contact,
+      },
+      {
+        path: "/about",
+        Component: About,
       },
       {
         path: "/mealDetails/:id",

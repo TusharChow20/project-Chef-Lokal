@@ -1,16 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import useAxiosSecurity from "../../../Hooks/useAxiosSecurity";
 import { useAuth } from "../../../Hooks/useAuth";
 import useRole from "../../../Hooks/useRole";
 import Swal from "sweetalert2";
+import { Pencil, X, Check, Upload } from "lucide-react";
+import axios from "axios";
 
 const MyProfile = () => {
   const { role } = useRole();
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecurity();
 
-  const { data: userInfo, isLoading } = useQuery({
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [isEditingImage, setIsEditingImage] = useState(false);
+  const [newAddress, setNewAddress] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const {
+    data: userInfo,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["user", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users?email=${user.email}`);
@@ -18,11 +31,10 @@ const MyProfile = () => {
     },
   });
 
-  // Fetch role change requests for this user
   const {
     data: roleChangeRequests,
     isLoading: isLoadingRequests,
-    refetch,
+    refetch: refetchRequests,
   } = useQuery({
     queryKey: ["roleChangeRequests", user?.email],
     queryFn: async () => {
@@ -31,8 +43,156 @@ const MyProfile = () => {
     },
   });
 
+  // Handle Address Edit
+  const handleEditAddress = () => {
+    setNewAddress(userInfo?.address || "");
+    setIsEditingAddress(true);
+  };
+
+  const handleCancelAddressEdit = () => {
+    setIsEditingAddress(false);
+    setNewAddress("");
+  };
+
+  const handleSaveAddress = async () => {
+    if (!newAddress.trim() || newAddress.length < 5) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Address",
+        text: "Address must be at least 5 characters long",
+        confirmButtonColor: "#ef4444",
+      });
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      // Update in MongoDB
+      await axiosSecure.patch(`/users/${user.email}`, {
+        address: newAddress,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Address Updated!",
+        text: "Your address has been updated successfully",
+        confirmButtonColor: "#10b981",
+        timer: 2000,
+      });
+
+      setIsEditingAddress(false);
+      refetch(); // Refresh profile data
+    } catch (error) {
+      console.error("Address update error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update address. Please try again.",
+        confirmButtonColor: "#ef4444",
+      });
+    }
+    setIsUpdating(false);
+  };
+
+  // Handle Image Edit
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({
+          icon: "error",
+          title: "File Too Large",
+          text: "Please select an image smaller than 5MB",
+          confirmButtonColor: "#ef4444",
+        });
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid File Type",
+          text: "Please select an image file (JPG, PNG, GIF)",
+          confirmButtonColor: "#ef4444",
+        });
+        return;
+      }
+
+      setSelectedImage(file);
+
+      // Show preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setIsEditingImage(true);
+    }
+  };
+
+  const handleCancelImageEdit = () => {
+    setIsEditingImage(false);
+    setSelectedImage(null);
+    setImagePreview(null);
+  };
+
+  const handleSaveImage = async () => {
+    if (!selectedImage) return;
+
+    setIsUpdating(true);
+    try {
+      // Upload to ImgBB
+      const formData = new FormData();
+      formData.append("image", selectedImage);
+
+      const imageUploadResponse = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_HOST}`,
+        formData
+      );
+
+      if (!imageUploadResponse.data.success) {
+        throw new Error("Image upload failed");
+      }
+
+      const newPhotoURL = imageUploadResponse.data.data.url;
+
+      // Update in MongoDB
+      await axiosSecure.patch(`/users/${user.email}`, {
+        photoURL: newPhotoURL,
+      });
+
+      // Update Firebase profile
+      await updateUserProfile({
+        photoURL: newPhotoURL,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Photo Updated!",
+        text: "Your profile photo has been updated successfully",
+        confirmButtonColor: "#10b981",
+        timer: 2000,
+      });
+
+      setIsEditingImage(false);
+      setSelectedImage(null);
+      setImagePreview(null);
+      refetch(); // Refresh profile data
+    } catch (error) {
+      console.error("Image update error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update profile photo. Please try again.",
+        confirmButtonColor: "#ef4444",
+      });
+    }
+    setIsUpdating(false);
+  };
+
   const handleRoleChangeReq = async (roleType) => {
-    // Show confirmation dialog
     const result = await Swal.fire({
       title: `Become a ${
         roleType.charAt(0).toUpperCase() + roleType.slice(1)
@@ -46,11 +206,9 @@ const MyProfile = () => {
       cancelButtonText: "Cancel",
     });
 
-    // If user confirms
     if (result.isConfirmed) {
       try {
         const entryTime = new Date().toISOString();
-
         const roleUpdate = {
           userName: user.displayName,
           userEmail: user.email,
@@ -61,7 +219,6 @@ const MyProfile = () => {
 
         await axiosSecure.post("/role_change_req", roleUpdate);
 
-        // Show success message
         Swal.fire({
           title: "Request Submitted!",
           text: `Your ${roleType} role request has been submitted successfully. Please wait for admin approval.`,
@@ -70,10 +227,8 @@ const MyProfile = () => {
           confirmButtonText: "OK",
         });
 
-        // Refetch role change requests to update button states
-        refetch();
+        refetchRequests();
       } catch (error) {
-        // Show error message if request fails
         Swal.fire({
           title: "Error!",
           text: "Failed to submit request. Please try again.",
@@ -85,7 +240,6 @@ const MyProfile = () => {
     }
   };
 
-  // Check if user has pending requests
   const hasChefRequest = roleChangeRequests?.some(
     (req) => req.requestType === "chef" && req.requestStatus === "pending"
   );
@@ -108,24 +262,63 @@ const MyProfile = () => {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
-        {/* Profile Card */}
         <div className="rounded-lg shadow-md overflow-hidden">
-          {/* Profile Header */}
           <div className="bg-gradient-to-r from-orange-400 to-red-500 h-24"></div>
 
           <div className="px-6 pb-6">
-            {/* Profile Image */}
+            {/* Profile Image with Edit */}
             <div className="flex justify-center -mt-12 mb-4">
-              <img
-                src={userInfo?.photoURL}
-                alt={userInfo?.displayName}
-                className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
-              />
+              <div className="relative group">
+                <img
+                  src={imagePreview || userInfo?.photoURL}
+                  alt={userInfo?.displayName}
+                  className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
+                />
+
+                {!isEditingImage && (
+                  <label
+                    htmlFor="imageUpload"
+                    className="absolute bottom-0 right-0 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 cursor-pointer shadow-lg transition-all"
+                  >
+                    <Pencil className="w-4 h-4" />
+                    <input
+                      id="imageUpload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSelect}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+
+                {isEditingImage && (
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 flex gap-2 bg-base-300 p-2 rounded-lg shadow-lg">
+                    <button
+                      onClick={handleSaveImage}
+                      disabled={isUpdating}
+                      className="btn btn-success btn-sm text-white"
+                    >
+                      {isUpdating ? (
+                        <span className="loading loading-spinner loading-xs"></span>
+                      ) : (
+                        <Check className="w-4 h-4" />
+                      )}
+                    </button>
+                    <button
+                      onClick={handleCancelImageEdit}
+                      disabled={isUpdating}
+                      className="btn btn-error btn-sm text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* User Info */}
-            <div className="text-center mb-6">
-              <h2 className="text-4xl text-white font-bold text-gray-800">
+            <div className="text-center mb-6 mt-8">
+              <h2 className="text-4xl text-white font-bold">
                 {userInfo?.displayName}
               </h2>
               <p className="text-gray-200 mt-1">{userInfo?.email}</p>
@@ -133,13 +326,54 @@ const MyProfile = () => {
 
             {/* Details Grid */}
             <div className="space-y-4 mb-6">
+              {/* Address with Edit */}
               <div className="flex items-center justify-between border-b pb-3">
                 <span className="text-gray-100 md:text-xl font-medium">
                   Address:
                 </span>
-                <span className="text-gray-300 md:text-xl font-semibold text-end">
-                  {userInfo?.address}
-                </span>
+
+                {!isEditingAddress ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-300 md:text-xl font-semibold text-end">
+                      {userInfo?.address}
+                    </span>
+                    <button
+                      onClick={handleEditAddress}
+                      className="btn btn-ghost btn-sm text-orange-500 hover:text-orange-600"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 flex-1 ml-4">
+                    <input
+                      type="text"
+                      value={newAddress}
+                      onChange={(e) => setNewAddress(e.target.value)}
+                      className="input input-bordered input-sm flex-1"
+                      placeholder="Enter new address"
+                      disabled={isUpdating}
+                    />
+                    <button
+                      onClick={handleSaveAddress}
+                      disabled={isUpdating}
+                      className="btn btn-success btn-sm text-white"
+                    >
+                      {isUpdating ? (
+                        <span className="loading loading-spinner loading-xs"></span>
+                      ) : (
+                        <Check className="w-4 h-4" />
+                      )}
+                    </button>
+                    <button
+                      onClick={handleCancelAddressEdit}
+                      disabled={isUpdating}
+                      className="btn btn-error btn-sm text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between border-b pb-3">
@@ -177,11 +411,9 @@ const MyProfile = () => {
             </div>
 
             {/* Action Buttons */}
-            {/* Action Buttons */}
             {role === "user" && (
               <>
                 {userInfo?.userStatus === "fraud" ? (
-                  // FRAUD BLOCK UI
                   <div className="mt-6 text-center bg-red-600/20 border border-red-500 px-4 py-6 rounded-xl">
                     <h2 className="text-xl font-bold text-red-400 mb-2">
                       Account Restricted
@@ -191,12 +423,9 @@ const MyProfile = () => {
                       cannot request Chef or Admin roles at this time.
                     </p>
                   </div>
-                ) : // NORMAL BUTTONS WHEN ACTIVE
-                userInfo?.userStatus === "rejected" ? (
+                ) : userInfo?.userStatus === "rejected" ? (
                   <div className="grid grid-cols-2 gap-4">
-                    <button
-                      className={`text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md bg-gray-400 cursor-not-allowed text-gray-700 w-full`}
-                    >
+                    <button className="text-xl font-semibold py-3 rounded-lg transition duration-200 shadow-md bg-gray-400 cursor-not-allowed text-gray-700 w-full">
                       Your Request Denied
                     </button>
                   </div>
@@ -232,7 +461,6 @@ const MyProfile = () => {
 
             {role === "chef" && (
               <div>
-                {/* Chef ID */}
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-gray-100 font-medium md:text-xl">
                     Chef ID:
@@ -242,7 +470,6 @@ const MyProfile = () => {
                   </span>
                 </div>
 
-                {/* Admin Request Button */}
                 <button
                   onClick={() => handleRoleChangeReq("admin")}
                   disabled={hasAdminRequest || userInfo?.userStatus === "fraud"}
