@@ -71,8 +71,8 @@ const Meals = () => {
     return (
       <div>
         <h1 className="text-3xl font-bold mb-6 px-3">Our Meals</h1>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-3">
-          {[...Array(6)].map((_, index) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 px-3">
+          {[...Array(10)].map((_, index) => (
             <div
               key={index}
               className="card bg-base-100 shadow-xl animate-pulse"
@@ -126,7 +126,7 @@ const Meals = () => {
         </button>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-3">
         {sortedMeals.map((meal) => (
           <div
             key={meal._id}
