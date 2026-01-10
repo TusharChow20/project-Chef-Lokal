@@ -12,16 +12,30 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
   const { signIn } = useAuth();
-  // const navigate = useNavigate();
+
+  // Demo credentials
+  const demoCredentials = {
+    email: "demo@example.com",
+    password: "Demo123",
+  };
+
+  const handleDemoLogin = () => {
+    // Auto-fill the form with demo credentials
+    setValue("email", demoCredentials.email);
+    setValue("password", demoCredentials.password);
+
+    // Automatically submit
+    handleLoginSubmit(demoCredentials);
+  };
 
   const handleLoginSubmit = async (data) => {
     try {
       await signIn(data.email, data.password);
 
-      // Success alert
       Swal.fire({
         title: "Welcome Back!",
         text: "You have successfully logged in!",
@@ -32,14 +46,9 @@ const Login = () => {
         timerProgressBar: true,
       });
       navigate(from, { replace: true });
-
-      // Optional: Redirect after successful login
-      // navigate("/dashboard");
     } catch (error) {
-      // Error alert
       let errorMessage = "Failed to login. Please try again.";
 
-      // Handle specific Firebase errors
       if (error.code === "auth/user-not-found") {
         errorMessage = "No account found with this email.";
       } else if (error.code === "auth/wrong-password") {
@@ -67,61 +76,115 @@ const Login = () => {
   };
 
   return (
-    <div className="mt-[20vh] text-xl ">
-      <form onSubmit={handleSubmit(handleLoginSubmit)}>
-        <fieldset className="border-base-300 rounded-box max-w-2xl mx-auto border p-6 flex flex-col gap-3">
-          <legend className="fieldset-legend text-2xl">Login</legend>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-2">Welcome Back</h1>
+          <p className="text-gray-400">Login to continue to your account</p>
+        </div>
 
-          <label className="label text-white">Email</label>
-          <input
-            type="email"
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            className="input w-full"
-            placeholder="Email"
-          />
-          {errors.email && (
-            <span className="text-red-500 text-sm">{errors.email.message}</span>
-          )}
+        <form onSubmit={handleSubmit(handleLoginSubmit)}>
+          <div className="bg-base-200 rounded-2xl shadow-2xl p-8 space-y-6">
+            {/* Email Field */}
+            <div>
+              <label className="label">
+                <span className="label-text font-semibold text-lg">Email</span>
+              </label>
+              <input
+                type="email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
+                className="input input-bordered w-full text-lg"
+                placeholder="Enter your email"
+              />
+              {errors.email && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  {errors.email.message}
+                </span>
+              )}
+            </div>
 
-          <label className="label text-white">Password</label>
-          <input
-            type="password"
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-            })}
-            className="input w-full"
-            placeholder="Password"
-          />
-          {errors.password && (
-            <span className="text-red-500 text-sm">
-              {errors.password.message}
-            </span>
-          )}
+            {/* Password Field */}
+            <div>
+              <label className="label">
+                <span className="label-text font-semibold text-lg">
+                  Password
+                </span>
+              </label>
+              <input
+                type="password"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+                className="input input-bordered w-full text-lg"
+                placeholder="Enter your password"
+              />
+              {errors.password && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  {errors.password.message}
+                </span>
+              )}
+            </div>
 
-          <button className="btn btn-neutral mt-4 w-full">Login</button>
+            {/* Forgot Password */}
+            <div className="text-right">
+              <button type="button" className="link link-primary text-sm">
+                Forgot Password?
+              </button>
+            </div>
 
-          {/* Extra actions */}
-          <div className="flex justify-between mt-2">
-            <button type="button" className="btn btn-link p-0">
-              Forgot Password?
+            {/* Login Button */}
+            <button className="btn btn-primary w-full text-lg text-white">
+              Login
             </button>
-            <Link to={"/register"} type="button" className="btn btn-link p-0">
-              Register
-            </Link>
+
+            {/* Demo Login Button */}
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              className="btn btn-outline btn-secondary w-full text-lg"
+            >
+              🎭 Try Demo Login
+            </button>
+
+            {/* Divider */}
+            <div className="divider">OR</div>
+
+            {/* Social Login */}
+            <SocialLogin />
+
+            {/* Register Link */}
+            <div className="text-center pt-4">
+              <p className="text-gray-400">
+                Don't have an account?{" "}
+                <Link
+                  to="/register"
+                  className="link link-primary font-semibold"
+                >
+                  Register here
+                </Link>
+              </p>
+            </div>
           </div>
-          {/* <SocialLogin></SocialLogin> */}
-        </fieldset>
-      </form>
+        </form>
+
+        {/* Demo Credentials Info */}
+        <div className="mt-6 p-4 bg-info bg-opacity-10 rounded-lg border border-info">
+          <p className="text-sm text-center text-info-content">
+            💡 <strong>Demo Credentials:</strong> Click "Try Demo Login" to test
+            the app
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

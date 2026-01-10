@@ -46,7 +46,7 @@ const MyReviews = () => {
     });
 
     if (result.isConfirmed) {
-      console.log(reviewId);
+      // console.log(reviewId);
 
       try {
         await axiosSecure.delete(`/reviews/${reviewId}`);
@@ -97,14 +97,14 @@ const MyReviews = () => {
         comment: data.comment,
       };
 
-      console.log("Updating review:", updatedReview); // Debug log
+      // console.log("Updating review:", updatedReview); // Debug log
 
       const response = await axiosSecure.patch(
         `/reviews/${selectedReview._id}`,
         updatedReview
       );
 
-      console.log("Update response:", response.data); // Debug log
+      // console.log("Update response:", response.data); // Debug log
 
       refetch();
       setIsModalOpen(false);

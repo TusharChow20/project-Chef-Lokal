@@ -3,6 +3,7 @@ import React from "react";
 import auth from "../../../Firebase/firebase.config";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router";
+import axios from "axios";
 
 const provider = new GoogleAuthProvider();
 
@@ -10,12 +11,35 @@ const SocialLogin = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
+
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Success alert
+      // console.log("Google login successful:", user.email);
+
+      // Save user to MongoDB - using plain axios to avoid auth interceptor issues
+      const userDataForMongo = {
+        email: user.email,
+        displayName: user.displayName || user.email,
+        photoURL: user.photoURL || "",
+        address: "", // Google doesn't provide address
+        role: "user",
+        userStatus: "active",
+      };
+
+      try {
+        await axios.post(
+          "https://chef-server-nu.vercel.app/users",
+          userDataForMongo
+        );
+        // console.log("User saved to MongoDB:", response.data);
+      } catch {
+        // If error is "user already exists", that's fine
+        console.log("success");
+      }
+
       Swal.fire({
         title: "Welcome!",
         text: `Successfully logged in as ${user.displayName || user.email}`,
@@ -25,15 +49,12 @@ const SocialLogin = () => {
         timer: 2000,
         timerProgressBar: true,
       });
-      navigate(from, { replace: true });
 
-      // Optional: Redirect or do something with the user data
-      // console.log("User:", user);
+      navigate(from, { replace: true });
     } catch (error) {
-      // Error alert
+      console.error("Google login error:", error);
       let errorMessage = "Failed to login with Google. Please try again.";
 
-      // Handle specific Firebase errors
       if (error.code === "auth/popup-closed-by-user") {
         errorMessage = "Login popup was closed. Please try again.";
       } else if (error.code === "auth/cancelled-popup-request") {
@@ -64,13 +85,14 @@ const SocialLogin = () => {
   return (
     <div>
       <button
+        type="button"
         onClick={handleGoogleLogin}
-        className="btn text-white border-[#e5e5e5] w-full text-l"
+        className="btn btn-outline w-full text-lg gap-3 hover:bg-white hover:text-black transition-all"
       >
         <svg
           aria-label="Google logo"
-          width="16"
-          height="16"
+          width="20"
+          height="20"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
         >
@@ -94,7 +116,7 @@ const SocialLogin = () => {
             ></path>
           </g>
         </svg>
-        Login with Google
+        Continue with Google
       </button>
     </div>
   );

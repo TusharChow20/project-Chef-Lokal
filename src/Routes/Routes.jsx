@@ -46,12 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/mealDetails/:id",
-        // Component: MealDetails,
-        element: (
-          <PrivateRoute>
-            <MealDetails></MealDetails>
-          </PrivateRoute>
-        ),
+        Component: MealDetails,
       },
       {
         path: "/login",

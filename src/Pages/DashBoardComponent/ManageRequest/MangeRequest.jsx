@@ -66,7 +66,7 @@ const ManageRequest = () => {
   //   });
 
   const handleAction = async (request, action) => {
-    console.log(request);
+    // console.log(request);
 
     const actionText = action === "approve" ? "approve" : "reject";
     const actionColor = action === "approve" ? "#10b981" : "#ef4444";

@@ -70,7 +70,7 @@ const ChefMeal = () => {
   const updateMutation = useMutation({
     mutationFn: async ({ mealId, mealData }) => {
       const res = await axiosSecure.put(`/meals/meal/${mealId}`, mealData);
-      console.log(res, "mealid", mealId);
+      // console.log(res, "mealid", mealId);
 
       return res.data;
     },

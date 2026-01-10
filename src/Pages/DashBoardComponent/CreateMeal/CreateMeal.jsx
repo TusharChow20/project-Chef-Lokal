@@ -22,7 +22,7 @@ const CreateMeal = () => {
       return res.data;
     },
   });
-  console.log(userInfo);
+  // console.log(userInfo);
 
   const [ingredients, setIngredients] = useState([]);
   const [currentIngredient, setCurrentIngredient] = useState("");
